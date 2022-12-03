@@ -1,25 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+
+import styled from "styled-components";
+import {Provider} from "react-redux";
+
+import {ThemeProvider} from "styled-components";
+import {defaultTheme} from "./theme";
+import {store} from "./store";
+import {Sidebar} from "./components/Sidebar";
+import GlobalStyles from "./globalStyles";
+
+const Layout = styled.div`
+  height: 100vh;
+  display: flex;
+`;
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={defaultTheme}>
+      <Provider store={store}>
+        <Layout>
+          <Sidebar />
+        </Layout>
+
+        <GlobalStyles />
+      </Provider>
+    </ThemeProvider>
   );
 }
 
