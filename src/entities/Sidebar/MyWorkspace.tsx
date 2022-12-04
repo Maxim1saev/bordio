@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import {Avatar} from "../Avatar";
+import {Avatar} from "../../components/Avatar";
 
 export const MyWorkspace = () => (
   <Container>
