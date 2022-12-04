@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import {ExpansionPanel} from "../ExpansionPanel";
+import {ExpansionPanel} from "../../components/ExpansionPanel";
 
 export const Lists = () => (
   <Container>
