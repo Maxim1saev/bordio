@@ -2,28 +2,32 @@ import React from "react";
 
 import styled from "styled-components";
 
-import {ReactComponent as SearchIcon} from "../../public/icons/SearchIcon.svg";
+import { ReactComponent as SearchIcon } from "../../public/icons/SearchIcon.svg";
 
 interface InputProps {
-  Icon?: React.ReactElement;
   placeholder: string;
+  className?: string;
+  Icon?: React.ReactElement;
 }
 
-export const Input = ({Icon, placeholder, ...rest}: InputProps) => {
-  return (
-    <Container>
-      <SearchInput placeholder={placeholder} {...rest} />
+export const Input = ({
+  Icon,
+  placeholder,
+  className,
+  ...rest
+}: InputProps) => (
+  <Container className={className}>
+    <SearchInput placeholder={placeholder} {...rest} />
 
-      <IconWrapper>{Icon || <SearchIcon />}</IconWrapper>
-    </Container>
-  );
-};
+    <IconWrapper>{Icon || <SearchIcon />}</IconWrapper>
+  </Container>
+);
 
 const Container = styled.div`
   position: relative;
   height: 32px;
   display: flex;
-  background: ${({theme}) => theme.palette.blue2};
+  background: ${({ theme }) => theme.palette.blue2};
   border-radius: 4px;
   overflow: hidden;
 `;
@@ -32,8 +36,8 @@ const SearchInput = styled.input`
   width: calc(100% - 24px);
   padding: 9px 8px 9px 10px;
 
-  background: ${({theme}) => theme.palette.blue2};
-  color: ${({theme}) => theme.palette.gray4};
+  background: inherit;
+  color: ${({ theme }) => theme.palette.gray4};
   font-weight: 400;
   font-size: 14px;
   line-height: 14px;

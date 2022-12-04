@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import {Avatar} from "../../components/Avatar";
+import { Avatar } from "../../components";
 
 export const MyWorkspace = () => (
   <Container>
@@ -15,7 +15,7 @@ const Container = styled.div`
   align-items: center;
   padding: 6px 16px;
 
-  background: ${({theme}) => theme.palette.blue2};
+  background: ${({ theme }) => theme.palette.blue2};
 
   span {
     margin-left: 8px;
@@ -23,6 +23,6 @@ const Container = styled.div`
     font-weight: 400;
     font-size: 14px;
     line-height: 16px;
-    color: ${({theme}) => theme.palette.white};
+    color: ${({ theme }) => theme.palette.white};
   }
 `;

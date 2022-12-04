@@ -7,7 +7,7 @@ import {store} from "./store";
 import {defaultTheme} from "./theme";
 import GlobalStyles from "./globalStyles";
 
-import {Tools, Sidebar} from "./entities";
+import {Tools, Sidebar, Board} from "./entities";
 
 const Layout = styled.div`
   height: 100vh;
@@ -20,6 +20,7 @@ const App = () => (
       <Layout>
         <Sidebar />
         <Tools />
+        <Board />
       </Layout>
 
       <GlobalStyles />
