@@ -1,4 +1,4 @@
-import {DefaultTheme} from "styled-components";
+import { DefaultTheme } from "styled-components";
 
 export const defaultTheme: DefaultTheme = {
   palette: {
@@ -10,6 +10,7 @@ export const defaultTheme: DefaultTheme = {
     gray2: "#F0F0F0",
     gray3: "#A5A5A5",
     gray4: "#8C939F",
+    gray5: "#E1E4E7",
     softCyan: "#abe9ce",
 
     blue1: "#0094FF",

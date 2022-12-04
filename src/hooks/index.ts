@@ -1,4 +1,5 @@
-import {useTypedDispatch} from "./useTypedDispatch";
-import {useTypedSelector} from "./useTypedSelector";
+import { useTypedDispatch } from "./useTypedDispatch";
+import { useTypedSelector } from "./useTypedSelector";
+import { useClickOutside } from "./useClickOutside";
 
-export {useTypedDispatch, useTypedSelector};
+export { useTypedDispatch, useTypedSelector, useClickOutside };

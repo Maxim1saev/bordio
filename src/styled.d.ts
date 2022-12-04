@@ -14,6 +14,8 @@ declare module "styled-components" {
       gray2: string;
       gray3: string;
       gray4: string;
+      gray5: string;
+      
       softCyan: string;
 
       blue1: string;
