@@ -1,13 +1,13 @@
 import styled from "styled-components";
-import {Provider} from "react-redux";
+import { Provider } from "react-redux";
 
-import {ThemeProvider} from "styled-components";
+import { ThemeProvider } from "styled-components";
 
-import {store} from "./store";
-import {defaultTheme} from "./theme";
+import { store } from "./store";
+import { defaultTheme } from "./theme";
 import GlobalStyles from "./globalStyles";
 
-import {Tools, Sidebar, Board} from "./entities";
+import { Tools, Sidebar, Board } from "./entities";
 
 const Layout = styled.div`
   height: 100vh;

@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import { Avatar, Input, Dropdown } from "../../../components";
 import { ReactComponent as PlusIcon } from "../../../public/icons/PlusIcon.svg";
@@ -25,7 +24,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 20px;
 
   box-shadow: 0px 2px 4px #f0f1f2;
 `;
