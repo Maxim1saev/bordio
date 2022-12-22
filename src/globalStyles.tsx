@@ -1,12 +1,18 @@
-import {createGlobalStyle} from "styled-components";
+import { createGlobalStyle } from "styled-components";
 import "./public/fonts/index.css";
 
 const GlobalStyles = createGlobalStyle`
 
-*, *::before, *::after {
+* {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+
+  &::-webkit-scrollbar {
+        display: none;
+    }
+
+     scrollbar-width: none;
 }
 
 button {
@@ -56,6 +62,9 @@ body {
     margin: auto;
     font-family: 'Roboto-Regular', sans-serif;
     font-family: 'Roboto-Medium', sans-serif;
+
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
 }
 `;
 

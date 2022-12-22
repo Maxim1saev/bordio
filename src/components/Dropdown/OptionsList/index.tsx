@@ -13,7 +13,6 @@ export const OptionsList = ({
   onItemClick,
 }: ComboBoxProps) => (
   <List isOpen={isOpen}>
-    <>{console.log("isOpen", isOpen)}</>
     {options.length &&
       options.map((option) => (
         <Option key={option.id} onClick={() => onItemClick(option)}>
