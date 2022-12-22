@@ -7,11 +7,12 @@ import { TasksBoard } from "./TasksBoard";
 import { HeaderBoard } from "./HeaderBoard";
 
 const Container = styled.section`
-  width: 100%;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: hidden;
+  overflow-y: hidden;
+  overflow-x: auto;
 `;
 
 export const Board = () => {

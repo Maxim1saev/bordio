@@ -1,35 +1,32 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  min-height: 100vh;
   width: 100%;
-  display: flex;
-  flex-direction: column;
 
-  font-size: calc(10px + 2vmin);
-`;
-
-export const Grid = styled.div`
-  display: grid;
-  gap: 0.5rem;
-  width: 100%;
-  height: 100%;
-  grid-template-columns: repeat(auto-fill, 300px);
-  align-items: start;
   overflow: auto;
+  margin-top: 80px;
 `;
 
-export const HeadGrid = styled.div`
-  display: grid;
-  width: 100%;
-  grid-template-columns: repeat(auto-fill, 300px);
-  align-items: start;
+export const Grid = styled.div<Props>`
+  display: flex;
+  width: ${({ length }) => length * 300}px;
+  /* width: 100vw; */
+  overflow-x: auto;
+`;
+
+export const HeadGrid = styled.div<Props>`
+  display: flex;
+  width: ${({ length }) => length * 300}px;
+  /* width: calc(100vw - 154px - 226px); */
+  position: sticky;
+  top: 0px;
+  background: ${({ theme }) => theme.palette.white};
 `;
 
 export const Column = styled.div`
-  height: calc(100vh - 80px - 58px);
-  min-height: 100px;
+  width: 300px;
   padding: 0 10px;
+  overflow-y: auto;
 
   border-right: 1px solid ${({ theme }) => theme.palette.gray};
 
@@ -39,7 +36,12 @@ export const Column = styled.div`
   }
 `;
 
+interface Props {
+  length: number;
+}
+
 export const ColumnTitle = styled.div`
+  width: 300px;
   height: 58px;
   display: flex;
   align-items: center;

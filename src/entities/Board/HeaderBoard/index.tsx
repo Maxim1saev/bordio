@@ -19,7 +19,10 @@ const MOKK_OPTIONS: DropdownItem[] = [
 ];
 
 const Container = styled.div`
-  width: 100%;
+  position: fixed;
+  left: 326px;
+  right: 0;
+  top: 0;
   height: 80px;
   display: flex;
   align-items: center;

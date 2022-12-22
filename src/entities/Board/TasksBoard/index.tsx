@@ -5,12 +5,6 @@ import { Card } from "./Card";
 
 import { Container, Grid, Column, ColumnTitle, HeadGrid } from "./styled";
 
-interface TaskItem {
-  title: string;
-  duration: string;
-  color: string;
-}
-
 export const TasksBoard = ({ data }: { data: any[] }) => {
   const drugItem = useRef<{ groupIndex: number; itemIndex: number } | null>();
   const drugNode = useRef<any>();
@@ -102,13 +96,13 @@ export const TasksBoard = ({ data }: { data: any[] }) => {
 
   return (
     <Container>
-      <HeadGrid>
+      <HeadGrid length={list.length}>
         {list?.map((group: any, groupIndex) => (
           <ColumnTitle>{group.title}</ColumnTitle>
         ))}
       </HeadGrid>
 
-      <Grid>
+      <Grid length={list.length}>
         {list?.map((group: any, groupIndex) => (
           <Column
             key={group.title}

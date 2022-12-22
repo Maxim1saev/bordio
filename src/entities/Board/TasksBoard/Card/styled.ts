@@ -18,19 +18,16 @@ export const TaskDuration = styled.span`
 `;
 
 export const Container = styled.div<{ isCurrent: boolean; background: string }>`
-  margin-bottom: 10px;
   min-height: 70px;
-  background-color: ${({ isCurrent, background }) =>
-    isCurrent ? "#282c34" : background};
-  border-radius: 5px;
-  color: #282c34;
-  font-weight: bold;
-
+  margin-bottom: 10px;
   padding: 15px;
 
   transition: all 0.2s;
-
   border-radius: 8px;
+  font-weight: bold;
+  background-color: ${({ isCurrent, theme, background }) =>
+    isCurrent ? theme.palette.white : background};
+  opacity: ${({ isCurrent }) => isCurrent && 0.3};
 
   &:first-of-type {
     margin-top: 40px;
