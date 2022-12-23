@@ -20,7 +20,7 @@ const MOKK_OPTIONS: DropdownItem[] = [
 
 const Container = styled.div`
   position: fixed;
-  left: 326px;
+  left: 380px;
   right: 0;
   top: 0;
   height: 80px;

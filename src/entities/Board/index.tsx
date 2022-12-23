@@ -15,25 +15,10 @@ const Container = styled.section`
   overflow-x: auto;
 `;
 
-export const Board = () => {
-  const [data, setData] = useState<any[]>([]);
+export const Board = () => (
+  <Container>
+    <HeaderBoard />
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/tasks")
-      .then((response: any) => {
-        setData(response.data);
-      })
-      .catch((error: any) => {
-        console.log("error", error);
-      });
-  }, []);
-
-  return (
-    <Container>
-      <HeaderBoard />
-
-      <TasksBoard data={data} />
-    </Container>
-  );
-};
+    <TasksBoard />
+  </Container>
+);

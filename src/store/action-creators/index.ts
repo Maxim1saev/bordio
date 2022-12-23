@@ -1,4 +1,3 @@
-import {fetchTodo} from "./todo";
-import {fetchUsers} from "./user";
+import { fetchTasks } from "./tasks";
 
-export const allActions = {fetchUsers, fetchTodo};
+export const allActions = { fetchTasks };

@@ -33,6 +33,7 @@ export const List = styled.ul<{ isOpen: boolean }>`
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
   overflow: auto;
+  z-index: 10;
 
   &::-webkit-scrollbar {
     display: none;
