@@ -1,33 +1,35 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useTypedSelector, useActions } from "../../../hooks";
 
 import axios from "axios";
 import { Card } from "./Card";
 
 import { Container, Grid, Column, ColumnTitle, HeadGrid } from "./styled";
 
-export const TasksBoard = ({ data }: { data: any[] }) => {
+export const TasksBoard = () => {
   const drugItem = useRef<{ groupIndex: number; itemIndex: number } | null>();
   const drugNode = useRef<any>();
 
-  const [list, setList] = useState<any[]>(data);
+  const { tasks } = useTypedSelector((state) => state.tasks);
+
+  const { fetchTasks } = useActions();
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const [list, setList] = useState<any[]>(tasks);
   const [dragging, setDragging] = useState(false);
 
   useEffect(() => {
-    setList(data);
-  }, [data]);
+    setList(tasks);
+  }, [tasks]);
 
   useEffect(() => {
     if (!dragging) {
-      axios
-        .post("http://localhost:5000/tasks", {
-          list,
-        })
-        .then(function (response) {
-          console.log(response);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+      axios.post("http://localhost:5000/tasks", {
+        list,
+      });
     }
   }, [list]);
 

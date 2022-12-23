@@ -10,14 +10,12 @@ export const Container = styled.div`
 export const Grid = styled.div<Props>`
   display: flex;
   width: ${({ length }) => length * 300}px;
-  /* width: 100vw; */
   overflow-x: auto;
 `;
 
 export const HeadGrid = styled.div<Props>`
   display: flex;
   width: ${({ length }) => length * 300}px;
-  /* width: calc(100vw - 154px - 226px); */
   position: sticky;
   top: 0px;
   background: ${({ theme }) => theme.palette.white};
@@ -29,11 +27,6 @@ export const Column = styled.div`
   overflow-y: auto;
 
   border-right: 1px solid ${({ theme }) => theme.palette.gray};
-
-  &:first-of-type,
-  :last-of-type {
-    padding: 0 20px;
-  }
 `;
 
 interface Props {
