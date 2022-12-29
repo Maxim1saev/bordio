@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import axios from "axios";
-
 import { TasksBoard } from "./TasksBoard";
 import { HeaderBoard } from "./HeaderBoard";
 
@@ -15,10 +13,13 @@ const Container = styled.section`
   overflow-x: auto;
 `;
 
-export const Board = () => (
-  <Container>
-    <HeaderBoard />
+export const Board = () => {
+  const [data, setData] = useState();
+  return (
+    <Container>
+      <HeaderBoard data={data} />
 
-    <TasksBoard />
-  </Container>
-);
+      <TasksBoard setData={setData} />
+    </Container>
+  );
+};

@@ -1,37 +1,81 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useTypedSelector, useActions } from "../../../hooks";
 
-import axios from "axios";
+import { useAuth } from "../../../useAuth";
+
 import { Card } from "./Card";
 
 import { Container, Grid, Column, ColumnTitle, HeadGrid } from "./styled";
+import { v4 as uuidv4 } from "uuid";
+import {
+  addDoc,
+  collection,
+  getFirestore,
+  getDocs,
+  getDoc,
+  updateDoc,
+  arrayUnion,
+  setDoc,
+  doc,
+  arrayRemove,
+  onSnapshot,
+} from "firebase/firestore";
 
-export const TasksBoard = () => {
+import { useCollectionData } from "react-firebase-hooks/firestore";
+
+const CARD_COLORS = [
+  " #B7E1FE",
+  "#BFF2FC",
+  "#A4D7DB",
+  "#ABE9CE",
+  "#CEF8C9",
+  "#D9E6A2",
+  "#FEC6B7",
+  "#FFDFBA",
+  "#F2BAE1",
+  "#D8DCFF",
+];
+
+export const TasksBoard = ({ setData }: { setData: any }) => {
   const drugItem = useRef<{ groupIndex: number; itemIndex: number } | null>();
   const drugNode = useRef<any>();
 
   const { tasks } = useTypedSelector((state) => state.tasks);
 
-  const { fetchTasks } = useActions();
+  const { dataBase, auth, user, setUser } = useAuth();
+
+  // const query = collection(dataBase, "oses"); получу корневую коллекцию
+  const query = collection(dataBase, "oses/Windows/children");
+
+  const [docs, loading, error] = useCollectionData(query);
+
+  const addNew = async () => {
+    const docRef = doc(dataBase, "oses/Windows/children", uuidv4()); // третий аргумент это id если не уникальный то не сработает второй раз
+
+    await setDoc(docRef, { name: "Window 11" });
+  };
+
+  console.log("docs", docs);
+
+  const colletionRef = collection(dataBase, "users");
 
   useEffect(() => {
-    fetchTasks();
+    const unsub = onSnapshot(colletionRef, (querySnapshot) => {
+      const items: any = [];
+
+      querySnapshot.forEach((doc) => {
+        if (doc.id === user?.uid) items.push(doc.data()?.column);
+      });
+
+      items.length && setList(items[0]);
+    });
+    return () => {
+      unsub();
+    };
   }, []);
 
   const [list, setList] = useState<any[]>(tasks);
   const [dragging, setDragging] = useState(false);
-
-  useEffect(() => {
-    setList(tasks);
-  }, [tasks]);
-
-  useEffect(() => {
-    if (!dragging) {
-      axios.post("http://localhost:5000/tasks", {
-        list,
-      });
-    }
-  }, [list]);
 
   const handleDragStart = (
     event: React.DragEvent<HTMLDivElement>,
@@ -55,17 +99,6 @@ export const TasksBoard = () => {
     drugNode.current = null;
 
     if (!list.length) return;
-
-    axios
-      .post("http://localhost:5000/tasks", {
-        list,
-      })
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
   };
 
   const handleDragEnter = (
@@ -81,10 +114,10 @@ export const TasksBoard = () => {
       setList((prevValue) => {
         const newList = [...prevValue];
 
-        newList[groupIndex].items.splice(
+        newList[groupIndex].tasks.splice(
           itemIndex,
           0,
-          newList[currentItem!.groupIndex].items.splice(
+          newList[currentItem!.groupIndex].tasks.splice(
             currentItem?.itemIndex,
             1
           )[0]
@@ -99,22 +132,24 @@ export const TasksBoard = () => {
   return (
     <Container>
       <HeadGrid length={list.length}>
-        {list?.map((group: any, groupIndex) => (
-          <ColumnTitle>{group.title}</ColumnTitle>
+        {list?.map((group: any) => (
+          <ColumnTitle key={group.id}>{group.title}</ColumnTitle>
         ))}
       </HeadGrid>
+
+      <button onClick={addNew}>addNew</button>
 
       <Grid length={list.length}>
         {list?.map((group: any, groupIndex) => (
           <Column
-            key={group.title}
+            key={group.id}
             onDragEnter={
-              dragging && !group.items.length
+              dragging && !group.tasks.length
                 ? (event) => handleDragEnter(event, groupIndex, 0)
                 : undefined
             }
           >
-            {group.items.map((item: any, itemIndex: number) => (
+            {group.tasks?.map((item: any, itemIndex: number) => (
               <Card
                 key={item}
                 handleDragEnter={(event: React.DragEvent<HTMLDivElement>) =>
@@ -139,3 +174,14 @@ export const TasksBoard = () => {
     </Container>
   );
 };
+
+const COLORS = [
+  "#ABE9CE",
+  "#D8DCFF",
+  "#D9E6A2",
+  "#FEC6B7",
+  "#F2BAE1",
+  "#FFDFBA",
+];
+const getRandomColor = () =>
+  COLORS[Math.abs(Math.round(Math.random() * COLORS.length) - 1)];
