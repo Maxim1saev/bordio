@@ -59,12 +59,23 @@ const App = () => {
               <Routes>
                 {user?.uid && (
                   <>
-                    <Route path="/" element={<TablePage />} />
+                    <Route
+                      path="http://Maxim1saev.github.io/bordio/"
+                      element={<TablePage />}
+                    />
                   </>
                 )}
-                <Route path="/auth" element={<AuthPage />} />
+                <Route
+                  path="http://Maxim1saev.github.io/bordio/auth"
+                  element={<AuthPage />}
+                />
                 {!user?.uid && (
-                  <Route path="*" element={<Navigate to="/auth" />} />
+                  <Route
+                    path="*"
+                    element={
+                      <Navigate to="http://Maxim1saev.github.io/bordio/auth" />
+                    }
+                  />
                 )}
               </Routes>
             </BrowserRouter>
