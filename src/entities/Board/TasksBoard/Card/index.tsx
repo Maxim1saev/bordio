@@ -49,8 +49,6 @@ export const Card: FC<CardProps> = ({
 
   const [data] = useDocumentData(documents);
 
-  console.log("data", data);
-
   const deleteColumn = async () => {
     await setDoc(documents, {
       ...data,
