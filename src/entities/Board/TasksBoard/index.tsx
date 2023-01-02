@@ -1,11 +1,14 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { useTypedSelector, useActions } from "../../../hooks";
+import { useTypedSelector } from "../../../hooks";
 
 import { useAuth } from "../../../useAuth";
 
 import { Card } from "./Card";
 
 import { Container, Grid, Column, ColumnTitle, HeadGrid } from "./styled";
+import { ReactComponent as AddTaskIcon } from "../../../assets/AddTaskIcon.svg";
+import { CreateCard } from "./CreateCard";
+
 import { v4 as uuidv4 } from "uuid";
 import {
   addDoc,
@@ -27,10 +30,22 @@ import {
 } from "react-firebase-hooks/firestore";
 
 export const TasksBoard = ({ setData }: { setData: any }) => {
+  const [open, setOpen] = useState<boolean>(false);
+  const [newTaskColumn, setNewTaskColumn] = useState<string | undefined>();
+
+  const onClose = useCallback(() => {
+    setOpen(false);
+    setNewTaskColumn(undefined);
+  }, []);
+
+  const onOpen = useCallback((columnTitle: string | undefined) => {
+    // console.log("columnTitle", columnTitle);
+    setOpen(true);
+    setNewTaskColumn(columnTitle);
+  }, []);
+
   const drugItem = useRef<{ groupIndex: number; itemIndex: number } | null>();
   const drugNode = useRef<any>();
-
-  const indexes = useRef<number[]>();
 
   const { tasks } = useTypedSelector((state) => state.tasks);
 
@@ -42,13 +57,16 @@ export const TasksBoard = ({ setData }: { setData: any }) => {
 
   // const [docsData] = useDocumentData(documents);
 
-  const editTasks = async (column: string) => {
-    const documents = doc(dataBase, `users/${user.uid}/column/${column}`);
-    await setDoc(
-      documents,
-      list.find(({ title }) => title === column)
-    );
-  };
+  const editTasks = useCallback(
+    async (column: string) => {
+      const documents = doc(dataBase, `users/${user.uid}/column/${column}`);
+      await setDoc(
+        documents,
+        list.find(({ title }) => title === column)
+      );
+    },
+    [dataBase, list, user.uid]
+  );
 
   const [docs, loading, error] = useCollectionData(query);
 
@@ -122,60 +140,56 @@ export const TasksBoard = ({ setData }: { setData: any }) => {
   };
 
   return (
-    <Container>
-      <HeadGrid length={list?.length}>
-        {list?.map((group: any) => (
-          <ColumnTitle key={group.id}>{group.title}</ColumnTitle>
-        ))}
-      </HeadGrid>
+    <>
+      <Container>
+        <HeadGrid length={list?.length}>
+          {list?.map((group: any) => (
+            <ColumnTitle key={group.title}>{group.title}</ColumnTitle>
+          ))}
+        </HeadGrid>
 
-      <Grid length={list?.length}>
-        {list?.map((group: any, groupIndex) => (
-          <Column
-            key={group.id}
-            onDragEnter={
-              dragging && !group.tasks?.length
-                ? (event) => handleDragEnter(event, groupIndex, 0)
-                : undefined
-            }
-          >
-            {group.tasks?.map((item: any, itemIndex: number) => (
-              <Card
-                key={item}
-                handleDragEnter={(event: React.DragEvent<HTMLDivElement>) =>
-                  handleDragEnter(event, groupIndex, itemIndex)
-                }
-                handleDragStart={(event: React.DragEvent<HTMLDivElement>) =>
-                  handleDragStart(event, groupIndex, itemIndex)
-                }
-                isCurrent={
-                  dragging &&
-                  drugItem.current?.groupIndex === groupIndex &&
-                  drugItem.current?.itemIndex === itemIndex
-                }
-                item={item}
-                groupIndex={0}
-                itemIndex={0}
+        <Grid length={list?.length}>
+          {list?.map((group: any, groupIndex) => (
+            <Column
+              key={group.title}
+              onDragEnter={
+                dragging && !group.tasks?.length
+                  ? (event) => handleDragEnter(event, groupIndex, 0)
+                  : undefined
+              }
+            >
+              {group.tasks?.map((item: any, itemIndex: number) => (
+                <Card
+                  key={item.id}
+                  column={group.title}
+                  handleDragEnter={(event: React.DragEvent<HTMLDivElement>) =>
+                    handleDragEnter(event, groupIndex, itemIndex)
+                  }
+                  handleDragStart={(event: React.DragEvent<HTMLDivElement>) =>
+                    handleDragStart(event, groupIndex, itemIndex)
+                  }
+                  isCurrent={
+                    dragging &&
+                    drugItem.current?.groupIndex === groupIndex &&
+                    drugItem.current?.itemIndex === itemIndex
+                  }
+                  item={item}
+                  groupIndex={0}
+                  itemIndex={0}
+                />
+              ))}
+
+              <CreateCard
+                title={newTaskColumn}
+                open={!!newTaskColumn}
+                onClose={onClose}
               />
-            ))}
-          </Column>
-        ))}
-      </Grid>
-    </Container>
+
+              <AddTaskIcon onClick={() => onOpen(group.title)} />
+            </Column>
+          ))}
+        </Grid>
+      </Container>
+    </>
   );
 };
-
-const COLORS = [
-  " #B7E1FE",
-  "#BFF2FC",
-  "#A4D7DB",
-  "#ABE9CE",
-  "#CEF8C9",
-  "#D9E6A2",
-  "#FEC6B7",
-  "#FFDFBA",
-  "#F2BAE1",
-  "#D8DCFF",
-];
-const getRandomColor = () =>
-  COLORS[Math.abs(Math.round(Math.random() * COLORS.length) - 1)];

@@ -27,6 +27,7 @@ import {
   onSnapshot,
   query,
   where,
+  deleteDoc,
 } from "firebase/firestore";
 
 import {
@@ -63,9 +64,7 @@ export const HeaderBoard = ({ data }: { data: any }) => {
   const { dataBase, auth, user, setUser } = useAuth();
 
   const query = collection(dataBase, `users/${user.uid}/column`);
-  const documents = doc(dataBase, `users/${user.uid}/column/ppp`);
 
-  const [docsData] = useDocumentData(documents);
   const [docs, loading, error] = useCollectionData(query);
 
   const addNew = async () => {
@@ -74,20 +73,10 @@ export const HeaderBoard = ({ data }: { data: any }) => {
     await setDoc(docRef, { title: columnName, tasks: [] });
   };
 
-  const addTask = async () => {
-    const tasksNew = Array.isArray(docsData?.tasks) ? docsData?.tasks : [];
+  const deleteColumn = async () => {
+    const docRef = doc(dataBase, `users/${user.uid}/column/;l;;`); // третий аргумент это id если не уникальный то не сработает второй раз
 
-    await setDoc(documents, {
-      ...docsData,
-      tasks: [
-        ...tasksNew!,
-        {
-          color: getRandomColor(),
-          title: "Попался 000",
-          duration: "0809",
-        },
-      ],
-    });
+    await deleteDoc(docRef);
   };
 
   const handleOut = () => {
@@ -110,10 +99,12 @@ export const HeaderBoard = ({ data }: { data: any }) => {
 
           <span>Add column</span>
         </AddNewButton>
+        <AddNewButton onClick={deleteColumn}>
+          <PlusIcon />
 
-        <AddNewButton onClick={addTask}>
-          <span>addTask !!!</span>
+          <span>DELETE column</span>
         </AddNewButton>
+
         <AddNewButton onClick={handleOut}>
           <span>OUT</span>
         </AddNewButton>
