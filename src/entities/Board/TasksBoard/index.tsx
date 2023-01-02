@@ -1,11 +1,14 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useTypedSelector, useActions } from "../../../hooks";
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { useTypedSelector } from "../../../hooks";
 
 import { useAuth } from "../../../useAuth";
 
 import { Card } from "./Card";
 
 import { Container, Grid, Column, ColumnTitle, HeadGrid } from "./styled";
+import { ReactComponent as AddTaskIcon } from "../../../assets/AddTaskIcon.svg";
+import { CreateCard } from "./CreateCard";
+
 import { v4 as uuidv4 } from "uuid";
 import {
   addDoc,
@@ -21,22 +24,26 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 
-import { useCollectionData } from "react-firebase-hooks/firestore";
-
-const CARD_COLORS = [
-  " #B7E1FE",
-  "#BFF2FC",
-  "#A4D7DB",
-  "#ABE9CE",
-  "#CEF8C9",
-  "#D9E6A2",
-  "#FEC6B7",
-  "#FFDFBA",
-  "#F2BAE1",
-  "#D8DCFF",
-];
+import {
+  useCollectionData,
+  useDocumentData,
+} from "react-firebase-hooks/firestore";
 
 export const TasksBoard = ({ setData }: { setData: any }) => {
+  const [open, setOpen] = useState<boolean>(false);
+  const [newTaskColumn, setNewTaskColumn] = useState<string | undefined>();
+
+  const onClose = useCallback(() => {
+    setOpen(false);
+    setNewTaskColumn(undefined);
+  }, []);
+
+  const onOpen = useCallback((columnTitle: string | undefined) => {
+    // console.log("columnTitle", columnTitle);
+    setOpen(true);
+    setNewTaskColumn(columnTitle);
+  }, []);
+
   const drugItem = useRef<{ groupIndex: number; itemIndex: number } | null>();
   const drugNode = useRef<any>();
 
@@ -45,36 +52,28 @@ export const TasksBoard = ({ setData }: { setData: any }) => {
   const { dataBase, auth, user, setUser } = useAuth();
 
   // const query = collection(dataBase, "oses"); получу корневую коллекцию
-  const query = collection(dataBase, "oses/Windows/children");
+  const query = collection(dataBase, `users/${user.uid}/column`);
+  const [list, setList] = useState<any[]>(tasks);
+
+  // const [docsData] = useDocumentData(documents);
+
+  const editTasks = useCallback(
+    async (column: string) => {
+      const documents = doc(dataBase, `users/${user.uid}/column/${column}`);
+      await setDoc(
+        documents,
+        list.find(({ title }) => title === column)
+      );
+    },
+    [dataBase, list, user.uid]
+  );
 
   const [docs, loading, error] = useCollectionData(query);
 
-  const addNew = async () => {
-    const docRef = doc(dataBase, "oses/Windows/children", uuidv4()); // третий аргумент это id если не уникальный то не сработает второй раз
-
-    await setDoc(docRef, { name: "Window 11" });
-  };
-
-  console.log("docs", docs);
-
-  const colletionRef = collection(dataBase, "users");
-
   useEffect(() => {
-    const unsub = onSnapshot(colletionRef, (querySnapshot) => {
-      const items: any = [];
+    docs?.length && setList(docs);
+  }, [docs]);
 
-      querySnapshot.forEach((doc) => {
-        if (doc.id === user?.uid) items.push(doc.data()?.column);
-      });
-
-      items.length && setList(items[0]);
-    });
-    return () => {
-      unsub();
-    };
-  }, []);
-
-  const [list, setList] = useState<any[]>(tasks);
   const [dragging, setDragging] = useState(false);
 
   const handleDragStart = (
@@ -85,13 +84,24 @@ export const TasksBoard = ({ setData }: { setData: any }) => {
     drugItem.current = { groupIndex, itemIndex };
     drugNode.current = event.target;
 
-    drugNode.current.addEventListener("dragend", handleDragEnd);
+    drugNode.current.addEventListener("dragend", () =>
+      handleDragEnd(groupIndex)
+    );
 
     setTimeout(setDragging, 0, true);
   };
 
-  const handleDragEnd = () => {
+  const handleDragEnd = async (groupIndex: number) => {
     setDragging(false);
+
+    const currentItem = drugItem.current;
+
+    if (groupIndex !== currentItem!.groupIndex) {
+      editTasks(list[groupIndex].title);
+      editTasks(list[currentItem!.groupIndex].title);
+    }
+
+    editTasks(list[groupIndex].title);
 
     drugNode.current.removeEventListener("dragend", handleDragEnd);
 
@@ -114,10 +124,10 @@ export const TasksBoard = ({ setData }: { setData: any }) => {
       setList((prevValue) => {
         const newList = [...prevValue];
 
-        newList[groupIndex].tasks.splice(
+        newList[groupIndex]?.tasks?.splice(
           itemIndex,
           0,
-          newList[currentItem!.groupIndex].tasks.splice(
+          newList[currentItem!.groupIndex]?.tasks?.splice(
             currentItem?.itemIndex,
             1
           )[0]
@@ -130,58 +140,56 @@ export const TasksBoard = ({ setData }: { setData: any }) => {
   };
 
   return (
-    <Container>
-      <HeadGrid length={list.length}>
-        {list?.map((group: any) => (
-          <ColumnTitle key={group.id}>{group.title}</ColumnTitle>
-        ))}
-      </HeadGrid>
+    <>
+      <Container>
+        <HeadGrid length={list?.length}>
+          {list?.map((group: any) => (
+            <ColumnTitle key={group.title}>{group.title}</ColumnTitle>
+          ))}
+        </HeadGrid>
 
-      <button onClick={addNew}>addNew</button>
+        <Grid length={list?.length}>
+          {list?.map((group: any, groupIndex) => (
+            <Column
+              key={group.title}
+              onDragEnter={
+                dragging && !group.tasks?.length
+                  ? (event) => handleDragEnter(event, groupIndex, 0)
+                  : undefined
+              }
+            >
+              {group.tasks?.map((item: any, itemIndex: number) => (
+                <Card
+                  key={item.id}
+                  column={group.title}
+                  handleDragEnter={(event: React.DragEvent<HTMLDivElement>) =>
+                    handleDragEnter(event, groupIndex, itemIndex)
+                  }
+                  handleDragStart={(event: React.DragEvent<HTMLDivElement>) =>
+                    handleDragStart(event, groupIndex, itemIndex)
+                  }
+                  isCurrent={
+                    dragging &&
+                    drugItem.current?.groupIndex === groupIndex &&
+                    drugItem.current?.itemIndex === itemIndex
+                  }
+                  item={item}
+                  groupIndex={0}
+                  itemIndex={0}
+                />
+              ))}
 
-      <Grid length={list.length}>
-        {list?.map((group: any, groupIndex) => (
-          <Column
-            key={group.id}
-            onDragEnter={
-              dragging && !group.tasks.length
-                ? (event) => handleDragEnter(event, groupIndex, 0)
-                : undefined
-            }
-          >
-            {group.tasks?.map((item: any, itemIndex: number) => (
-              <Card
-                key={item}
-                handleDragEnter={(event: React.DragEvent<HTMLDivElement>) =>
-                  handleDragEnter(event, groupIndex, itemIndex)
-                }
-                handleDragStart={(event: React.DragEvent<HTMLDivElement>) =>
-                  handleDragStart(event, groupIndex, itemIndex)
-                }
-                isCurrent={
-                  dragging &&
-                  drugItem.current?.groupIndex === groupIndex &&
-                  drugItem.current?.itemIndex === itemIndex
-                }
-                item={item}
-                groupIndex={0}
-                itemIndex={0}
+              <CreateCard
+                title={newTaskColumn}
+                open={!!newTaskColumn}
+                onClose={onClose}
               />
-            ))}
-          </Column>
-        ))}
-      </Grid>
-    </Container>
+
+              <AddTaskIcon onClick={() => onOpen(group.title)} />
+            </Column>
+          ))}
+        </Grid>
+      </Container>
+    </>
   );
 };
-
-const COLORS = [
-  "#ABE9CE",
-  "#D8DCFF",
-  "#D9E6A2",
-  "#FEC6B7",
-  "#F2BAE1",
-  "#FFDFBA",
-];
-const getRandomColor = () =>
-  COLORS[Math.abs(Math.round(Math.random() * COLORS.length) - 1)];
