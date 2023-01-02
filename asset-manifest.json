@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/bordio/static/css/main.c5b17f64.css",
+    "main.js": "/bordio/static/js/main.52bd61b1.js",
+    "static/media/Roboto-Medium.ttf": "/bordio/static/media/Roboto-Medium.7c8d04cd831df3033c8a.ttf",
+    "static/media/Roboto-Regular.ttf": "/bordio/static/media/Roboto-Regular.fc2b5060f7accec5cf74.ttf",
+    "static/media/authBackground.jpg": "/bordio/static/media/authBackground.d525c5402789897e2c61.jpg",
+    "static/media/BordioLogo.svg": "/bordio/static/media/BordioLogo.09981d765f328e67b740f644c6494486.svg",
+    "static/media/TasksIcon.svg": "/bordio/static/media/TasksIcon.d73456850bdbcae6468904b73111c51a.svg",
+    "static/media/ScheduleIcon.svg": "/bordio/static/media/ScheduleIcon.5a47951307b62e7acabd229113295e14.svg",
+    "static/media/NotesIcon.svg": "/bordio/static/media/NotesIcon.3125a9e93b27ff56ddbe038556bdd09f.svg",
+    "static/media/RoadmapIcon.svg": "/bordio/static/media/RoadmapIcon.f40637fd943a7af0292ae0b8e69556ea.svg",
+    "static/media/SearchIcon.svg": "/bordio/static/media/SearchIcon.7ff89bb5ca5d78db80ffd6520e0ad41f.svg",
+    "static/media/BellIcon.svg": "/bordio/static/media/BellIcon.54cd4eaeff1482a5d96159f69f283d6f.svg",
+    "static/media/FilesIcon.svg": "/bordio/static/media/FilesIcon.81743221521174dbedcc3c633cd72dcd.svg",
+    "index.html": "/bordio/index.html",
+    "static/media/PlusIcon.svg": "/bordio/static/media/PlusIcon.670d409b7720754f0d8c1917d121601e.svg",
+    "static/media/AddTaskIcon.svg": "/bordio/static/media/AddTaskIcon.5b142223f7891ec40886c577cf99beb1.svg",
+    "static/media/ActiveMarkerIcon.svg": "/bordio/static/media/ActiveMarkerIcon.04f7d7748a63ffddc61405630191b540.svg",
+    "main.c5b17f64.css.map": "/bordio/static/css/main.c5b17f64.css.map",
+    "main.52bd61b1.js.map": "/bordio/static/js/main.52bd61b1.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c5b17f64.css",
+    "static/js/main.52bd61b1.js"
+  ]
+}
