@@ -50,8 +50,6 @@ const App = () => {
 
   const contextValue = { dataBase, auth, user, setUser };
 
-  console.log("user", user);
-
   return (
     <ThemeProvider theme={defaultTheme}>
       <Provider store={store}>

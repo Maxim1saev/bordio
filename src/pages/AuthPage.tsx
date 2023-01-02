@@ -98,13 +98,13 @@ export const AuthPage = () => {
     }
   }, [currentUser]);
 
-  // useEffect(() => {
-  //   const unlisten = onAuthStateChanged(auth, (user) => {
-  //     setUser(user || null);
-  //   });
+  useEffect(() => {
+    const unlisten = onAuthStateChanged(auth, (user) => {
+      setUser(user || null);
+    });
 
-  //   return () => unlisten();
-  // }, []);
+    return () => unlisten();
+  }, []);
 
   const handleRegister = async () => {
     createUserWithEmailAndPassword(auth, email, password)
@@ -125,12 +125,10 @@ export const AuthPage = () => {
         // Signed in
         const user = userCredential.user;
 
-        console.log("Signed user", user);
         setUser(user);
         // ...
       })
       .catch((error) => {
-        console.log("error", error);
         const errorCode = error.code;
         const errorMessage = error.message;
       });

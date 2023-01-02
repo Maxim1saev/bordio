@@ -1,10 +1,7 @@
 import { useState } from "react";
 
-import styled from "styled-components";
-import { Avatar, Input, Dropdown } from "../../../components";
+import { Dropdown } from "../../../components";
 import { ReactComponent as PlusIcon } from "../../../public/icons/PlusIcon.svg";
-
-import { DropdownItem } from "../../../components/Dropdown/types";
 
 import { NoificationButton } from "./NoificationButton";
 import { useAuth } from "../../../useAuth";
@@ -13,6 +10,8 @@ import { v4 as uuidv4 } from "uuid";
 
 import { Modal } from "../../../components/Modal";
 import { getAuth, signOut } from "firebase/auth";
+
+import { VIEW_TYPE_OPTIONS, MOKK_OPTIONS } from "./constants";
 
 import {
   addDoc,
@@ -29,136 +28,66 @@ import {
   query,
   where,
 } from "firebase/firestore";
-const VIEW_TYPE_OPTIONS: DropdownItem[] = [
-  { value: "Board view", id: 1 },
-  { value: "Table view", id: 2 },
-  { value: "Kanban", id: 3 },
-  { value: "Looong beautiful text ", id: 4 },
+
+import {
+  useCollectionData,
+  useDocumentData,
+} from "react-firebase-hooks/firestore";
+
+import {
+  Container,
+  AvatarStyled,
+  InputStyled,
+  Side,
+  AddNewButton,
+} from "./styled";
+
+const COLORS = [
+  " #B7E1FE",
+  "#BFF2FC",
+  "#A4D7DB",
+  "#ABE9CE",
+  "#CEF8C9",
+  "#D9E6A2",
+  "#FEC6B7",
+  "#FFDFBA",
+  "#F2BAE1",
+  "#D8DCFF",
 ];
-
-const MOKK_OPTIONS: DropdownItem[] = [
-  { value: "Filter", id: 1 },
-  { value: "Sort", id: 2 },
-];
-
-const Container = styled.div`
-  position: fixed;
-  left: 380px;
-  right: 0;
-  top: 0;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px;
-
-  box-shadow: 0px 2px 4px #f0f1f2;
-`;
-
-const AvatarStyled = styled(Avatar)`
-  width: 40px;
-  height: 40px;
-`;
-
-const InputStyled = styled(Input)`
-  width: 180px;
-  height: 40px;
-  padding: 12px 16px;
-
-  background: ${({ theme }) => theme.palette.gray1};
-  border-radius: 50px;
-
-  div {
-    right: 16px;
-  }
-`;
-
-const Side = styled.div`
-  display: flex;
-  column-gap: 16px;
-`;
-
-const AddNewButton = styled.button`
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  column-gap: 8px;
-  padding: 8px 20px;
-
-  border-radius: 50px;
-  box-shadow: 0px 2px 4px #f0f1f2;
-  background: ${({ theme }) => theme.palette.blue1};
-
-  svg path {
-    fill: ${({ theme }) => theme.palette.white};
-  }
-
-  span {
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 16px;
-    color: ${({ theme }) => theme.palette.white};
-  }
-`;
+const getRandomColor = () =>
+  COLORS[Math.abs(Math.round(Math.random() * COLORS.length) - 1)];
 
 export const HeaderBoard = ({ data }: { data: any }) => {
   const [open, setOpen] = useState(false);
   const [columnName, setColumnName] = useState("");
-  const [taskName, setTaskName] = useState("");
   const { dataBase, auth, user, setUser } = useAuth();
 
-  const addColumn = async () => {
-    try {
-      const docRef = doc(dataBase, "users", user.uid);
-      const docSnap = await getDoc(docRef);
+  const query = collection(dataBase, `users/${user.uid}/column`);
+  const documents = doc(dataBase, `users/${user.uid}/column/ppp`);
 
-      docSnap.exists()
-        ? await updateDoc(docRef, {
-            column: arrayUnion({
-              id: uuidv4(),
-              title: columnName,
-              tasks: [
-                {
-                  color: "red",
-                  title: "My task",
-                  duration: "888",
-                },
-              ],
-            }),
-          })
-        : await setDoc(docRef, {
-            column: [
-              {
-                id: uuidv4(),
-                title: columnName,
-                tasks: [],
-              },
-            ],
-          });
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
+  const [docsData] = useDocumentData(documents);
+  const [docs, loading, error] = useCollectionData(query);
+
+  const addNew = async () => {
+    const docRef = doc(dataBase, `users/${user.uid}/column`, columnName); // третий аргумент это id если не уникальный то не сработает второй раз
+
+    await setDoc(docRef, { title: columnName, tasks: [] });
   };
 
   const addTask = async () => {
-    try {
-      const docRef = doc(dataBase, "users", user.uid);
-      const docSnap = await getDoc(docRef);
+    const tasksNew = Array.isArray(docsData?.tasks) ? docsData?.tasks : [];
 
-      // const currentData = docSnap
-      //   .data()
-      //   ?.column.find((item: any) => item?.title === "New COLUMN");
-
-      // console.log("currentData", currentData);
-      // //
-
-      await updateDoc(docRef, {
-        column: data,
-      });
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
+    await setDoc(documents, {
+      ...docsData,
+      tasks: [
+        ...tasksNew!,
+        {
+          color: getRandomColor(),
+          title: "Попался 000",
+          duration: "0809",
+        },
+      ],
+    });
   };
 
   const handleOut = () => {
@@ -172,6 +101,7 @@ export const HeaderBoard = ({ data }: { data: any }) => {
   };
 
   const onClose = () => setOpen(false);
+
   return (
     <Container>
       <Side>
@@ -181,6 +111,9 @@ export const HeaderBoard = ({ data }: { data: any }) => {
           <span>Add column</span>
         </AddNewButton>
 
+        <AddNewButton onClick={addTask}>
+          <span>addTask !!!</span>
+        </AddNewButton>
         <AddNewButton onClick={handleOut}>
           <span>OUT</span>
         </AddNewButton>
@@ -206,7 +139,7 @@ export const HeaderBoard = ({ data }: { data: any }) => {
           type="text"
         />
 
-        <AddNewButton onClick={addColumn}>
+        <AddNewButton onClick={addNew}>
           <span>CREATE</span>
         </AddNewButton>
       </Modal>
