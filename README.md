@@ -1,5 +1,8 @@
 # Getting Started with Create React App
 
+
+https://vercel.com/maxim1905/bordio
+
 https://www.youtube.com/watch?v=6UiKsCLLGEM
 
 https://bordio.com/
