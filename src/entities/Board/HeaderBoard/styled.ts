@@ -3,7 +3,7 @@ import { Avatar, Input } from "../../../components";
 
 export const Container = styled.div`
   position: fixed;
-  left: 380px;
+  left: 226px;
   right: 0;
   top: 0;
   height: 80px;

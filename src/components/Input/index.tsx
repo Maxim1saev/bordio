@@ -2,8 +2,6 @@ import React from "react";
 
 import styled from "styled-components";
 
-import { ReactComponent as SearchIcon } from "../../public/icons/SearchIcon.svg";
-
 interface InputProps {
   placeholder: string;
   className?: string;
@@ -19,7 +17,7 @@ export const Input = ({
   <Container className={className}>
     <SearchInput placeholder={placeholder} {...rest} />
 
-    <IconWrapper>{Icon || <SearchIcon />}</IconWrapper>
+    {Icon && <IconWrapper>{Icon}</IconWrapper>}
   </Container>
 );
 
