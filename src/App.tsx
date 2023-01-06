@@ -1,4 +1,4 @@
-import { ChangeEvent, createContext, useEffect, useState } from "react";
+import { ChangeEvent, createContext, useCallback, useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import { Provider } from "react-redux";
 
@@ -15,6 +15,9 @@ import { AuthPage } from "./pages/AuthPage";
 
 import { AuthContext } from "./context";
 import { TablePage } from "./pages/TablePage";
+import { updateProfile, signOut } from "firebase/auth";
+
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const Layout = styled.div`
   height: 100vh;
@@ -34,6 +37,8 @@ const AuthWrap = styled.div`
 const app = initializeApp({
   apiKey: "AIzaSyBSYqn_iIOXdM5nfDQQJ5BQWjtz8x9M42Y",
   authDomain: "bordio-c9876.firebaseapp.com",
+  databaseURL:
+    "https://bordio-c9876-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "bordio-c9876",
   storageBucket: "bordio-c9876.appspot.com",
   messagingSenderId: "992306327822",
@@ -41,14 +46,47 @@ const app = initializeApp({
   measurementId: "G-C1BJSH0FP9",
 });
 
+const storage = getStorage();
+
 const auth = getAuth();
 
 let dataBase: Firestore | null = getFirestore(app);
 
+const uploadUserAvatar = async (file: any, user: any, setLoading: any) => {
+  const fileRef = ref(storage, user?.uid + ".png");
+
+  await uploadBytes(fileRef, file);
+
+  const photoURL = await getDownloadURL(fileRef);
+
+  updateProfile(user, { photoURL });
+};
+
+// export async function upload(file, currentUser, setLoading) {
+//   const fileRef = ref(storage, currentUser.uid + ".png");
+
+//   setLoading(true);
+
+//   const snapshot = await uploadBytes(fileRef, file);
+//   const photoURL = await getDownloadURL(fileRef);
+
+//   updateProfile(currentUser, { photoURL });
+
+//   setLoading(false);
+//   alert("Uploaded file!");
+// }
+
 const App = () => {
   const [user, setUser] = useState<any>(null);
 
-  const contextValue = { dataBase, auth, user, setUser };
+  const contextValue = {
+    dataBase,
+    auth,
+    user,
+    setUser,
+    storage,
+    uploadUserAvatar,
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>

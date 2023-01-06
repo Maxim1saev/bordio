@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
 const AvatarImage = styled.img`
-  width: 22px;
-  height: 22px;
+  width: 30px;
+  height: 30px;
 
   border-radius: 50%;
 `;
@@ -14,7 +14,7 @@ interface AvatarProps {
 }
 
 export const Avatar: React.FC<AvatarProps> = ({
-  src,
+  src = "https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-Vector-PNG-Pic.png",
   alt = "avatarImage",
   className,
 }: AvatarProps) => <AvatarImage alt={alt} src={src} className={className} />;

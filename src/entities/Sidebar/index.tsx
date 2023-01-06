@@ -1,8 +1,9 @@
 import styled from "styled-components";
 
 import { Lists } from "./Lists";
-import { MyWorkspace } from "./MyWorkspace";
-import { TopBlock } from "./TopBlock";
+import { ReactComponent as BordioLogo } from "../../public/icons/BordioLogo.svg";
+import { Avatar } from "../../components";
+import { useAuth } from "../../useAuth";
 
 const Container = styled.aside`
   width: 226px;
@@ -11,12 +12,51 @@ const Container = styled.aside`
   background: ${({ theme }) => theme.palette.blue3};
 `;
 
-export const Sidebar = () => (
-  <Container>
-    <TopBlock />
+const Wrap = styled.div`
+  border-top: 1px solid ${({ theme }) => theme.palette.blue2};
+  border-bottom: 1px solid ${({ theme }) => theme.palette.blue2};
+`;
 
-    <MyWorkspace />
+const LogoWrapper = styled.div`
+  padding: 26px 16px 19px 16px;
+`;
 
-    <Lists />
-  </Container>
-);
+const WorkspaceContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 28px;
+  padding: 6px 16px;
+
+  background: ${({ theme }) => theme.palette.blue2};
+
+  span {
+    margin-left: 8px;
+
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+    color: ${({ theme }) => theme.palette.white};
+  }
+`;
+
+export const Sidebar = ({ setCurrentProject }: { setCurrentProject: any }) => {
+  const { user } = useAuth();
+
+  return (
+    <Container>
+      <LogoWrapper>
+        <BordioLogo />
+      </LogoWrapper>
+
+      <Wrap>
+        <WorkspaceContainer>
+          <Avatar src={user?.photoURL} />
+
+          <span> My workspace</span>
+        </WorkspaceContainer>
+
+        <Lists setCurrentProject={setCurrentProject} />
+      </Wrap>
+    </Container>
+  );
+};

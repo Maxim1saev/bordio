@@ -1,4 +1,10 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import { useTypedSelector } from "../../../hooks";
 
 import { useAuth } from "../../../useAuth";
@@ -29,7 +35,13 @@ import {
   useDocumentData,
 } from "react-firebase-hooks/firestore";
 
-export const TasksBoard = ({ setData }: { setData: any }) => {
+export const TasksBoard = ({
+  setData,
+  currentProject,
+}: {
+  setData: any;
+  currentProject: any;
+}) => {
   const [open, setOpen] = useState<boolean>(false);
   const [newTaskColumn, setNewTaskColumn] = useState<string | undefined>();
 
@@ -52,14 +64,13 @@ export const TasksBoard = ({ setData }: { setData: any }) => {
   const { dataBase, auth, user, setUser } = useAuth();
 
   // const query = collection(dataBase, "oses"); получу корневую коллекцию
-  const query = collection(dataBase, `users/${user.uid}/column`);
   const [list, setList] = useState<any[]>(tasks);
 
   // const [docsData] = useDocumentData(documents);
 
   const editTasks = useCallback(
     async (column: string) => {
-      const documents = doc(dataBase, `users/${user.uid}/column/${column}`);
+      const documents = doc(dataBase, `users/${user.uid}/columns/${column}`);
       await setDoc(
         documents,
         list.find(({ title }) => title === column)
@@ -68,10 +79,19 @@ export const TasksBoard = ({ setData }: { setData: any }) => {
     [dataBase, list, user.uid]
   );
 
+  const query = useMemo(
+    () =>
+      collection(
+        dataBase,
+        `users/${user.uid}/projects/${currentProject}/columns`
+      ),
+    [currentProject, dataBase, user.uid]
+  );
+
   const [docs, loading, error] = useCollectionData(query);
 
   useEffect(() => {
-    docs?.length && setList(docs);
+    docs?.length ? setList(docs) : setList([]);
   }, [docs]);
 
   const [dragging, setDragging] = useState(false);
@@ -160,6 +180,7 @@ export const TasksBoard = ({ setData }: { setData: any }) => {
             >
               {group.tasks?.map((item: any, itemIndex: number) => (
                 <Card
+                  currentProject={currentProject}
                   key={item.id}
                   column={group.title}
                   handleDragEnter={(event: React.DragEvent<HTMLDivElement>) =>
@@ -181,6 +202,7 @@ export const TasksBoard = ({ setData }: { setData: any }) => {
 
               <CreateCard
                 title={newTaskColumn}
+                currentProject={currentProject}
                 open={!!newTaskColumn}
                 onClose={onClose}
               />

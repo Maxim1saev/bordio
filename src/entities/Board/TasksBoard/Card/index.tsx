@@ -29,6 +29,7 @@ import {
 interface CardProps {
   item: any;
   column: string;
+  currentProject: string;
   isCurrent: boolean;
   groupIndex: number;
   itemIndex: number;
@@ -40,12 +41,16 @@ export const Card: FC<CardProps> = ({
   item,
   column,
   isCurrent,
+  currentProject,
   handleDragStart,
   handleDragEnter,
 }) => {
   const { dataBase, auth, user, setUser } = useAuth();
 
-  const documents = doc(dataBase, `users/${user.uid}/column/${column}`);
+  const documents = doc(
+    dataBase,
+    `users/${user.uid}/projects/${currentProject}/columns/${column}`
+  );
 
   const [data] = useDocumentData(documents);
 

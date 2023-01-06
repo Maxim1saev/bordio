@@ -13,13 +13,13 @@ const Container = styled.section`
   overflow-x: auto;
 `;
 
-export const Board = () => {
+export const Board = ({ currentProject }: { currentProject: any }) => {
   const [data, setData] = useState();
   return (
     <Container>
-      <HeaderBoard data={data} />
+      <HeaderBoard currentProject={currentProject} data={data} />
 
-      <TasksBoard setData={setData} />
+      <TasksBoard setData={setData} currentProject={currentProject} />
     </Container>
   );
 };

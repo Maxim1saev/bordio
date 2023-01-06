@@ -64,9 +64,11 @@ export const CreateCard = ({
   open,
   onClose,
   title,
+  currentProject,
 }: {
   open: boolean;
   onClose: any;
+  currentProject: any;
   title?: any | undefined;
 }) => {
   const [text, setText] = useState<string>();
@@ -75,7 +77,10 @@ export const CreateCard = ({
 
   const { dataBase, auth, user, setUser } = useAuth();
 
-  const documents = doc(dataBase, `users/${user.uid}/column/${title}`);
+  const documents = doc(
+    dataBase,
+    `users/${user.uid}/projects/${currentProject}/columns/${title}`
+  );
 
   const [docsData] = useDocumentData(documents);
 

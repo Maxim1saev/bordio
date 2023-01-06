@@ -9,7 +9,7 @@ import { useAuth } from "../../../useAuth";
 import { v4 as uuidv4 } from "uuid";
 
 import { Modal } from "../../../components/Modal";
-import { getAuth, signOut } from "firebase/auth";
+import { updateProfile, signOut } from "firebase/auth";
 
 import { VIEW_TYPE_OPTIONS, MOKK_OPTIONS } from "./constants";
 
@@ -29,11 +29,6 @@ import {
   where,
   deleteDoc,
 } from "firebase/firestore";
-
-import {
-  useCollectionData,
-  useDocumentData,
-} from "react-firebase-hooks/firestore";
 
 import {
   Container,
@@ -58,17 +53,24 @@ const COLORS = [
 const getRandomColor = () =>
   COLORS[Math.abs(Math.round(Math.random() * COLORS.length) - 1)];
 
-export const HeaderBoard = ({ data }: { data: any }) => {
+export const HeaderBoard = ({
+  data,
+  currentProject,
+}: {
+  data: any;
+  currentProject: any;
+}) => {
   const [open, setOpen] = useState(false);
   const [columnName, setColumnName] = useState("");
-  const { dataBase, auth, user, setUser } = useAuth();
-
-  const query = collection(dataBase, `users/${user.uid}/column`);
-
-  const [docs, loading, error] = useCollectionData(query);
+  const [userImage, setUserImage] = useState<any>();
+  const { dataBase, auth, user, setUser, uploadUserAvatar } = useAuth();
 
   const addNew = async () => {
-    const docRef = doc(dataBase, `users/${user.uid}/column`, columnName); // третий аргумент это id если не уникальный то не сработает второй раз
+    const docRef = doc(
+      dataBase,
+      `users/${user.uid}/projects/${currentProject}/columns`,
+      columnName
+    ); // третий аргумент это id если не уникальный то не сработает второй раз
 
     await setDoc(docRef, { title: columnName, tasks: [] });
   };
@@ -88,6 +90,11 @@ export const HeaderBoard = ({ data }: { data: any }) => {
         // An error happened.
       });
   };
+  console.log("userImage", userImage);
+
+  const handleUpload = () => {
+    uploadUserAvatar(userImage, user);
+  };
 
   const onClose = () => setOpen(false);
 
@@ -104,28 +111,37 @@ export const HeaderBoard = ({ data }: { data: any }) => {
 
           <span>DELETE column</span>
         </AddNewButton>
-
         <AddNewButton onClick={handleOut}>
           <span>OUT</span>
         </AddNewButton>
 
-        <Dropdown options={VIEW_TYPE_OPTIONS} />
+        <input
+          accept=".jpg, .jpeg, .png,"
+          type="file"
+          onChange={(event: any) => {
+            setUserImage(event.target.files[0]);
+          }}
+        />
+        <button onClick={handleUpload}>UPLOAD</button>
 
+        <Dropdown options={VIEW_TYPE_OPTIONS} />
         <Dropdown options={MOKK_OPTIONS} />
       </Side>
 
       <Side>
-        <InputStyled placeholder="Search..." />
-
-        <NoificationButton />
-
-        <AvatarStyled src="https://icdn.lenta.ru/images/2020/10/09/14/20201009140751252/square_1280_22ba8acd098aa33202c1c812c0a734b8.jpg" />
+        {user.displayName}
+        <AvatarStyled
+          src={
+            user.photoURL ||
+            "https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-Vector-PNG-Pic.png"
+          }
+        />
       </Side>
 
       <Modal open={open} onClose={onClose}>
         <input
           style={{ border: "1px solid" }}
-          value={columnName}
+          defaultValue={columnName}
           onChange={(event: any) => setColumnName(event.target.value)}
           type="text"
         />

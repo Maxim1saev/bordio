@@ -5,6 +5,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
+  updateProfile,
 } from "firebase/auth";
 
 import { useAuth } from "../useAuth";
@@ -92,6 +93,8 @@ export const AuthPage = () => {
   const { setUser, auth, user: currentUser } = useAuth();
   const navigate = useNavigate();
 
+  console.log("user", currentUser);
+
   useEffect(() => {
     if (currentUser?.uid) {
       navigate("/");
@@ -99,11 +102,11 @@ export const AuthPage = () => {
   }, [currentUser]);
 
   useEffect(() => {
-    const unlisten = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user || null);
     });
 
-    return () => unlisten();
+    return () => unsubscribe();
   }, []);
 
   const handleRegister = async () => {
@@ -155,6 +158,7 @@ export const AuthPage = () => {
             setPassword(event.target.value)
           }
         />
+
         <Button onClick={handleRegister}>Register</Button>
         <Button onClick={handleLogin}>Auth</Button>
       </Fields>

@@ -1,12 +1,14 @@
+import { useState } from "react";
 import { Tools, Sidebar, Board } from "../entities";
 
 export const TablePage = () => {
+  const [currentProject, setCurrentProject] = useState();
   return (
     <>
-      <Sidebar />
+      <Sidebar setCurrentProject={setCurrentProject} />
 
       <Tools />
-      <Board />
+      <Board currentProject={currentProject} />
     </>
   );
 };
