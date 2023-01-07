@@ -47,7 +47,6 @@ export const HeaderBoard = ({ currentProject }: { currentProject: any }) => {
       })
       .catch((error) => {});
   };
-  console.log("userImage", userImage);
 
   const handleUpload = () => {
     uploadUserAvatar(userImage, user);

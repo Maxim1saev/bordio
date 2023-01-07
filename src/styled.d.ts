@@ -19,9 +19,11 @@ declare module "styled-components" {
 
       softCyan: string;
 
+      blue: string;
       blue1: string;
       blue2: string;
       blue3: string;
+      blue4: string;
 
       red: string;
 

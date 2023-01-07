@@ -14,7 +14,16 @@ interface AvatarProps {
 }
 
 export const Avatar: React.FC<AvatarProps> = ({
-  src = "https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-Vector-PNG-Pic.png",
+  src,
   alt = "avatarImage",
   className,
-}: AvatarProps) => <AvatarImage alt={alt} src={src} className={className} />;
+}: AvatarProps) => (
+  <AvatarImage
+    alt={alt}
+    src={
+      src ||
+      "https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-Vector-PNG-Pic.png"
+    }
+    className={className}
+  />
+);

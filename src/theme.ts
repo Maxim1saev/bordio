@@ -14,9 +14,11 @@ export const defaultTheme: DefaultTheme = {
     gray5: "#E1E4E7",
     softCyan: "#abe9ce",
 
+    blue: "#7DBDEB",
     blue1: "#0094FF",
     blue2: "#2D4071",
     blue3: "#0F1D40",
+    blue4: "#0076CC",
 
     red: "#F21247",
     green: "#435E52",
