@@ -5,7 +5,9 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
-  updateProfile,
+  GoogleAuthProvider,
+  signInWithPopup,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 
 import { useAuth } from "../useAuth";
@@ -13,6 +15,122 @@ import authBackground from "../assets/authBackground.jpg";
 import React from "react";
 
 export const AuthContext = createContext({});
+
+export const AuthPage = () => {
+  const [email, setEmail] = useState("test@mail.com");
+  const [password, setPassword] = useState("123123");
+
+  const provider = new GoogleAuthProvider();
+
+  const { setUser, auth, user: currentUser } = useAuth();
+  const navigate = useNavigate();
+
+  console.log("user", currentUser);
+
+  useEffect(() => {
+    if (currentUser?.uid) {
+      navigate("/");
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user || null);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleRegister = async () => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        setUser(user);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+      });
+  };
+
+  const handleLogin = async () => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+
+        setUser(user);
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
+  };
+
+  const forgotPasswordHandler = () => {
+    if (email)
+      sendPasswordResetEmail(auth, email).then(() => {
+        setEmail("");
+      });
+  };
+  return (
+    <Container>
+      <Fields>
+        <Title>Log in</Title>
+
+        <Input
+          placeholder="ЭМЕЙЛ"
+          type="text"
+          value={email}
+          onChange={(event: ChangeEvent<HTMLInputElement>) =>
+            setEmail(event.target.value)
+          }
+        />
+        <Input
+          placeholder="ПАРОЛЬ"
+          type="password"
+          value={password}
+          onChange={(event: ChangeEvent<HTMLInputElement>) =>
+            setPassword(event.target.value)
+          }
+        />
+
+        <Button onClick={handleRegister}>Register</Button>
+        <Button onClick={handleLogin}>Auth</Button>
+        <Button onClick={forgotPasswordHandler}>FORGOT PASSWORD</Button>
+        <Button
+          onClick={() =>
+            signInWithPopup(auth, provider)
+              .then((result) => {
+                // This gives you a Google Access Token. You can use it to access the Google API.
+                const credential =
+                  GoogleAuthProvider.credentialFromResult(result);
+                const token = credential?.accessToken;
+                // The signed-in user info.
+                const user = result.user;
+                // ...
+              })
+              .catch((error) => {
+                // Handle Errors here.
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                // The email of the user's account used.
+                const email = error.customData.email;
+                // The AuthCredential type that was used.
+                const credential =
+                  GoogleAuthProvider.credentialFromError(error);
+                // ...
+              })
+          }
+        >
+          GOOGLE
+        </Button>
+      </Fields>
+    </Container>
+  );
+};
 
 const Container = styled.div`
   width: 100%;
@@ -85,83 +203,3 @@ const Input = styled.input`
 
   margin-bottom: 16px;
 `;
-
-export const AuthPage = () => {
-  const [email, setEmail] = useState("test@mail.com");
-  const [password, setPassword] = useState("123123");
-
-  const { setUser, auth, user: currentUser } = useAuth();
-  const navigate = useNavigate();
-
-  console.log("user", currentUser);
-
-  useEffect(() => {
-    if (currentUser?.uid) {
-      navigate("/");
-    }
-  }, [currentUser]);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user || null);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  const handleRegister = async () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        setUser(user);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // ..
-      });
-  };
-
-  const handleLogin = async () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-
-        setUser(user);
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-      });
-  };
-
-  return (
-    <Container>
-      <Fields>
-        <Title>Log in</Title>
-
-        <Input
-          placeholder="ЭМЕЙЛ"
-          type="text"
-          value={email}
-          onChange={(event: ChangeEvent<HTMLInputElement>) =>
-            setEmail(event.target.value)
-          }
-        />
-        <Input
-          placeholder="ПАРОЛЬ"
-          type="password"
-          value={password}
-          onChange={(event: ChangeEvent<HTMLInputElement>) =>
-            setPassword(event.target.value)
-          }
-        />
-
-        <Button onClick={handleRegister}>Register</Button>
-        <Button onClick={handleLogin}>Auth</Button>
-      </Fields>
-    </Container>
-  );
-};
