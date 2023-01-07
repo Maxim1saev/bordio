@@ -1,82 +1,41 @@
 import { useState } from "react";
 
-import { Dropdown } from "../../../components";
 import { ReactComponent as PlusIcon } from "../../../public/icons/PlusIcon.svg";
 
-import { NoificationButton } from "./NoificationButton";
 import { useAuth } from "../../../useAuth";
 
-import { v4 as uuidv4 } from "uuid";
-
 import { Modal } from "../../../components/Modal";
-import { updateProfile, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
 
-import { VIEW_TYPE_OPTIONS, MOKK_OPTIONS } from "./constants";
+import { setDoc, doc, deleteDoc, serverTimestamp } from "firebase/firestore";
 
-import {
-  addDoc,
-  collection,
-  getFirestore,
-  getDocs,
-  getDoc,
-  updateDoc,
-  arrayUnion,
-  setDoc,
-  doc,
-  arrayRemove,
-  onSnapshot,
-  query,
-  where,
-  deleteDoc,
-} from "firebase/firestore";
+import { Container, AvatarStyled, Side, AddNewButton } from "./styled";
 
-import {
-  Container,
-  AvatarStyled,
-  InputStyled,
-  Side,
-  AddNewButton,
-} from "./styled";
-
-const COLORS = [
-  " #B7E1FE",
-  "#BFF2FC",
-  "#A4D7DB",
-  "#ABE9CE",
-  "#CEF8C9",
-  "#D9E6A2",
-  "#FEC6B7",
-  "#FFDFBA",
-  "#F2BAE1",
-  "#D8DCFF",
-];
-const getRandomColor = () =>
-  COLORS[Math.abs(Math.round(Math.random() * COLORS.length) - 1)];
-
-export const HeaderBoard = ({
-  data,
-  currentProject,
-}: {
-  data: any;
-  currentProject: any;
-}) => {
+export const HeaderBoard = ({ currentProject }: { currentProject: any }) => {
   const [open, setOpen] = useState(false);
   const [columnName, setColumnName] = useState("");
   const [userImage, setUserImage] = useState<any>();
   const { dataBase, auth, user, setUser, uploadUserAvatar } = useAuth();
 
-  const addNew = async () => {
+  const addNewColumn = async () => {
     const docRef = doc(
       dataBase,
       `users/${user.uid}/projects/${currentProject}/columns`,
       columnName
-    ); // третий аргумент это id если не уникальный то не сработает второй раз
+    );
 
-    await setDoc(docRef, { title: columnName, tasks: [] });
+    await setDoc(docRef, {
+      timestamp: serverTimestamp(),
+      title: columnName,
+      tasks: [],
+    });
   };
 
   const deleteColumn = async () => {
-    const docRef = doc(dataBase, `users/${user.uid}/column/;l;;`); // третий аргумент это id если не уникальный то не сработает второй раз
+    const docRef = doc(
+      dataBase,
+      `users/${user.uid}/projects/${currentProject}/columns/${columnName}`
+    );
 
     await deleteDoc(docRef);
   };
@@ -86,9 +45,7 @@ export const HeaderBoard = ({
       .then(() => {
         setUser({});
       })
-      .catch((error) => {
-        // An error happened.
-      });
+      .catch((error) => {});
   };
   console.log("userImage", userImage);
 
@@ -106,7 +63,7 @@ export const HeaderBoard = ({
 
           <span>Add column</span>
         </AddNewButton>
-        <AddNewButton onClick={deleteColumn}>
+        <AddNewButton onClick={() => setOpen(true)}>
           <PlusIcon />
 
           <span>DELETE column</span>
@@ -123,19 +80,11 @@ export const HeaderBoard = ({
           }}
         />
         <button onClick={handleUpload}>UPLOAD</button>
-
-        <Dropdown options={VIEW_TYPE_OPTIONS} />
-        <Dropdown options={MOKK_OPTIONS} />
       </Side>
 
       <Side>
         {user.displayName}
-        <AvatarStyled
-          src={
-            user.photoURL ||
-            "https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-Vector-PNG-Pic.png"
-          }
-        />
+        <AvatarStyled src={user.photoURL} />
       </Side>
 
       <Modal open={open} onClose={onClose}>
@@ -146,8 +95,12 @@ export const HeaderBoard = ({
           type="text"
         />
 
-        <AddNewButton onClick={addNew}>
+        <AddNewButton onClick={addNewColumn}>
           <span>CREATE</span>
+        </AddNewButton>
+
+        <AddNewButton onClick={deleteColumn}>
+          <span>DELRTE</span>
         </AddNewButton>
       </Modal>
     </Container>

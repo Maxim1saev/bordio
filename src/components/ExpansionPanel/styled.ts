@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {Arrow} from "../Arrow";
+import { ReactComponent as ExpandArrowIcon } from "../../assets/ExpandArrowIcon.svg";
 
 export const Container = styled.div`
   display: flex;
@@ -12,26 +12,26 @@ export const Header = styled.div`
   align-items: center;
 
   cursor: pointer;
+
+  &:hover {
+    svg:last-child {
+      fill: ${({ theme }) => theme.palette.white};
+    }
+  }
 `;
 
-export const Title = styled.h3`
-  margin-left: 8px;
+export const ArrowStyled = styled(ExpandArrowIcon)<{ expanded: boolean }>`
+  margin-right: 8px;
 
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 16px;
-  color: ${({theme}) => theme.palette.white};
+  fill: ${({ theme }) => theme.palette.gray4};
+  transform: ${({ expanded }) => expanded && "rotate(180deg)"};
 `;
 
-export const ArrowStyled = styled(Arrow)<{expanded: boolean}>`
-  transform: ${({expanded}) => expanded && "rotate(180deg)"};
-`;
+export const Content = styled.div<{ expanded: boolean }>`
+  height: ${({ expanded }) => (expanded ? "100%" : 0)};
+  margin-top: ${({ expanded }) => expanded && "22px"};
 
-export const Content = styled.div<{expanded: boolean}>`
-  height: ${({expanded}) => (expanded ? "100%" : 0)};
-  margin-top: ${({expanded}) => expanded && "22px"};
-
-  opacity: ${({expanded}) => (expanded ? 1 : 0)};
+  opacity: ${({ expanded }) => (expanded ? 1 : 0)};
   overflow: hidden;
   transition: all 0.08s;
 `;

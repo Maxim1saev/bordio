@@ -8,7 +8,7 @@ const AvatarImage = styled.img`
 `;
 
 interface AvatarProps {
-  src?: string;
+  src?: string | undefined;
   alt?: string;
   className?: string;
 }

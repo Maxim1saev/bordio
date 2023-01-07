@@ -1,13 +1,16 @@
-import React, {FC} from "react";
+import React, { FC } from "react";
 
-import {Container, Header, Title, ArrowStyled, Content} from "./styled";
+import { Container, Header, ArrowStyled, Content } from "./styled";
 
 interface ExpansionPanelProps {
   title?: string | React.ReactNode;
   children?: React.ReactNode;
 }
 
-export const ExpansionPanel: FC<ExpansionPanelProps> = ({title, children}) => {
+export const ExpansionPanel: FC<ExpansionPanelProps> = ({
+  title,
+  children,
+}) => {
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpanded = () => {
@@ -18,7 +21,8 @@ export const ExpansionPanel: FC<ExpansionPanelProps> = ({title, children}) => {
     <Container>
       <Header onClick={handleExpanded}>
         <ArrowStyled expanded={expanded} />
-        <Title>{title}</Title>
+
+        {title}
       </Header>
 
       <Content expanded={expanded}>{children}</Content>

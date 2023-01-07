@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import { TasksBoard } from "./TasksBoard";
@@ -14,12 +13,11 @@ const Container = styled.section`
 `;
 
 export const Board = ({ currentProject }: { currentProject: any }) => {
-  const [data, setData] = useState();
   return (
     <Container>
-      <HeaderBoard currentProject={currentProject} data={data} />
+      <HeaderBoard currentProject={currentProject} />
 
-      <TasksBoard setData={setData} currentProject={currentProject} />
+      <TasksBoard currentProject={currentProject} />
     </Container>
   );
 };

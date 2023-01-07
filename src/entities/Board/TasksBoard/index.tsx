@@ -15,44 +15,18 @@ import { Container, Grid, Column, ColumnTitle, HeadGrid } from "./styled";
 import { ReactComponent as AddTaskIcon } from "../../../assets/AddTaskIcon.svg";
 import { CreateCard } from "./CreateCard";
 
-import { v4 as uuidv4 } from "uuid";
-import {
-  addDoc,
-  collection,
-  getFirestore,
-  getDocs,
-  getDoc,
-  updateDoc,
-  arrayUnion,
-  setDoc,
-  doc,
-  arrayRemove,
-  onSnapshot,
-} from "firebase/firestore";
+import { collection, setDoc, doc, orderBy, query } from "firebase/firestore";
 
-import {
-  useCollectionData,
-  useDocumentData,
-} from "react-firebase-hooks/firestore";
+import { useCollectionData } from "react-firebase-hooks/firestore";
 
-export const TasksBoard = ({
-  setData,
-  currentProject,
-}: {
-  setData: any;
-  currentProject: any;
-}) => {
-  const [open, setOpen] = useState<boolean>(false);
+export const TasksBoard = ({ currentProject }: { currentProject: any }) => {
   const [newTaskColumn, setNewTaskColumn] = useState<string | undefined>();
 
   const onClose = useCallback(() => {
-    setOpen(false);
     setNewTaskColumn(undefined);
   }, []);
 
   const onOpen = useCallback((columnTitle: string | undefined) => {
-    // console.log("columnTitle", columnTitle);
-    setOpen(true);
     setNewTaskColumn(columnTitle);
   }, []);
 
@@ -61,34 +35,35 @@ export const TasksBoard = ({
 
   const { tasks } = useTypedSelector((state) => state.tasks);
 
-  const { dataBase, auth, user, setUser } = useAuth();
+  const { dataBase, user } = useAuth();
 
-  // const query = collection(dataBase, "oses"); получу корневую коллекцию
   const [list, setList] = useState<any[]>(tasks);
-
-  // const [docsData] = useDocumentData(documents);
 
   const editTasks = useCallback(
     async (column: string) => {
-      const documents = doc(dataBase, `users/${user.uid}/columns/${column}`);
+      const documents = doc(
+        dataBase,
+        `users/${user.uid}/projects/${currentProject}/columns/${column}`
+      );
+
       await setDoc(
         documents,
         list.find(({ title }) => title === column)
       );
     },
-    [dataBase, list, user.uid]
+    [currentProject, dataBase, list, user.uid]
   );
 
-  const query = useMemo(
-    () =>
-      collection(
-        dataBase,
-        `users/${user.uid}/projects/${currentProject}/columns`
-      ),
-    [currentProject, dataBase, user.uid]
-  );
+  const queryData = useMemo(() => {
+    const collectionRef = collection(
+      dataBase,
+      `users/${user.uid}/projects/${currentProject}/columns`
+    );
 
-  const [docs, loading, error] = useCollectionData(query);
+    return query(collectionRef, orderBy("timestamp", "asc"));
+  }, [currentProject, dataBase, user.uid]);
+
+  const [docs, loading, error] = useCollectionData(queryData);
 
   useEffect(() => {
     docs?.length ? setList(docs) : setList([]);

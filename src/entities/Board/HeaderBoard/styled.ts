@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Avatar, Input } from "../../../components";
+import { Avatar } from "../../../components";
 
 export const Container = styled.div`
   position: fixed;
@@ -18,19 +18,6 @@ export const Container = styled.div`
 export const AvatarStyled = styled(Avatar)`
   width: 40px;
   height: 40px;
-`;
-
-export const InputStyled = styled(Input)`
-  width: 180px;
-  height: 40px;
-  padding: 12px 16px;
-
-  background: ${({ theme }) => theme.palette.gray1};
-  border-radius: 50px;
-
-  div {
-    right: 16px;
-  }
 `;
 
 export const Side = styled.div`
