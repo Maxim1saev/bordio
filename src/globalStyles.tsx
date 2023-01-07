@@ -7,6 +7,9 @@ const GlobalStyles = createGlobalStyle`
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  border: none;
+  outline: none;
+  font-family: Roboto, sans-serif !important;
 
   &::-webkit-scrollbar {
         display: none;
@@ -60,8 +63,6 @@ body {
     width: 100%;
     padding: 0;
     margin: auto;
-    font-family: 'Roboto-Regular', sans-serif;
-    font-family: 'Roboto-Medium', sans-serif;
 
     -webkit-tap-highlight-color: transparent;
     -webkit-font-smoothing: antialiased;

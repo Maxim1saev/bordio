@@ -11,27 +11,19 @@ import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
 import { store } from "./store";
 import { defaultTheme } from "./theme";
 import GlobalStyles from "./globalStyles";
-import { AuthPage } from "./pages/AuthPage";
+import { SignIn } from "./pages/Auth/SignIn";
+import { Registration } from "./pages/Auth/Registration";
+import { Reset } from "./pages/Auth/Reset";
 
 import { AuthContext } from "./context";
 import { TablePage } from "./pages/TablePage";
-import { updateProfile, signOut } from "firebase/auth";
+import { updateProfile } from "firebase/auth";
 
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const Layout = styled.div`
   height: 100vh;
   display: flex;
-`;
-
-const AuthWrap = styled.div`
-  display: flex;
-
-  input,
-  button {
-    height: 20px;
-    border: 1px solid;
-  }
 `;
 
 const app = initializeApp({
@@ -62,20 +54,6 @@ const uploadUserAvatar = async (file: any, user: any, setLoading: any) => {
   updateProfile(user, { photoURL });
 };
 
-// export async function upload(file, currentUser, setLoading) {
-//   const fileRef = ref(storage, currentUser.uid + ".png");
-
-//   setLoading(true);
-
-//   const snapshot = await uploadBytes(fileRef, file);
-//   const photoURL = await getDownloadURL(fileRef);
-
-//   updateProfile(currentUser, { photoURL });
-
-//   setLoading(false);
-//   alert("Uploaded file!");
-// }
-
 const App = () => {
   const [user, setUser] = useState<any>(null);
 
@@ -100,9 +78,12 @@ const App = () => {
                     <Route path="/" element={<TablePage />} />
                   </>
                 )}
-                <Route path="/auth" element={<AuthPage />} />
+                <Route path="/auth/signin" element={<SignIn />} />
+                <Route path="/auth/registration" element={<Registration />} />
+                <Route path="/auth/reset" element={<Reset />} />
+
                 {!user?.uid && (
-                  <Route path="*" element={<Navigate to="/auth" />} />
+                  <Route path="*" element={<Navigate to="/auth/signin" />} />
                 )}
               </Routes>
             </BrowserRouter>
