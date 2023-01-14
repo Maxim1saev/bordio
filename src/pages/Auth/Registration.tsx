@@ -47,9 +47,10 @@ export const Registration = () => {
         const user = userCredential.user;
         setUser(user);
 
-        updateProfile(user, { displayName: name });
+        name && updateProfile(user, { displayName: name });
       })
       .catch((error) => {
+        console.log("errorCode", error);
         const errorCode = error.code;
         const errorMessage = error.message;
         // ..

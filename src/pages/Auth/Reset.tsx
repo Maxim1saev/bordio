@@ -1,6 +1,5 @@
-import { ChangeEvent, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { onAuthStateChanged, sendPasswordResetEmail } from "firebase/auth";
+import { ChangeEvent, useState } from "react";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 import { useAuth } from "../../useAuth";
 
@@ -12,22 +11,7 @@ export const Reset = () => {
   const [email, setEmail] = useState("");
   const [isRequest, setIsRequest] = useState(false);
 
-  const { setUser, auth, user: currentUser } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (currentUser?.uid) {
-      navigate("/");
-    }
-  }, [currentUser]);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user || null);
-    });
-
-    return () => unsubscribe();
-  }, []);
+  const { auth } = useAuth();
 
   const forgotPasswordHandler = () => {
     if (email)

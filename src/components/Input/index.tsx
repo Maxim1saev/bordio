@@ -1,58 +1,43 @@
-import React from "react";
+import React, { FC } from "react";
 
 import styled from "styled-components";
 
 interface InputProps {
-  placeholder: string;
+  placeholder?: string;
+  value: string;
+  type: string;
   className?: string;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   Icon?: React.ReactElement;
 }
 
-export const Input = ({
+export const Input: FC<InputProps> = ({
   Icon,
   placeholder,
   className,
+  onChange,
+  value,
+  type,
   ...rest
-}: InputProps) => (
-  <Container className={className}>
-    <SearchInput placeholder={placeholder} {...rest} />
-
-    {Icon && <IconWrapper>{Icon}</IconWrapper>}
-  </Container>
+}) => (
+  <InputComponent
+    onChange={onChange}
+    value={value}
+    type={type}
+    placeholder={placeholder}
+    {...rest}
+  />
 );
 
-const Container = styled.div`
-  position: relative;
-  height: 32px;
-  display: flex;
-  background: ${({ theme }) => theme.palette.blue2};
-  border-radius: 4px;
-  overflow: hidden;
-`;
+const InputComponent = styled.input`
+  width: 100%;
+  min-height: 50px;
+  margin-bottom: 16px;
+  padding: 0px 18px;
 
-const SearchInput = styled.input`
-  width: calc(100% - 24px);
-  padding: 9px 8px 9px 10px;
-
-  background: inherit;
-  color: ${({ theme }) => theme.palette.gray4};
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 14px;
-`;
-
-const IconWrapper = styled.div`
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-
-  svg {
-    width: 16px;
-    height: 16px;
-  }
+  line-height: 50px;
+  border-radius: 8px;
+  border: 0px;
+  background: rgb(238, 242, 245);
+  font-size: 16px;
 `;
