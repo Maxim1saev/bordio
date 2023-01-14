@@ -37,6 +37,8 @@ export const TasksBoard = ({ currentProject }: { currentProject: any }) => {
 
   const { dataBase, user } = useAuth();
 
+  console.log("user", user);
+
   const [list, setList] = useState<any[]>(tasks);
 
   const editTasks = useCallback(

@@ -9,10 +9,13 @@ import { signOut } from "firebase/auth";
 
 import { setDoc, doc, deleteDoc, serverTimestamp } from "firebase/firestore";
 
+import { Settings } from "../Settings";
+
 import { Container, AvatarStyled, Side, AddNewButton } from "./styled";
 
 export const HeaderBoard = ({ currentProject }: { currentProject: any }) => {
   const [open, setOpen] = useState(false);
+  const [openSettings, setOpenSettings] = useState(false);
   const [columnName, setColumnName] = useState("");
   const [userImage, setUserImage] = useState<any>();
   const { dataBase, auth, user, setUser, uploadUserAvatar } = useAuth();
@@ -67,8 +70,13 @@ export const HeaderBoard = ({ currentProject }: { currentProject: any }) => {
 
           <span>DELETE column</span>
         </AddNewButton>
+
         <AddNewButton onClick={handleOut}>
           <span>OUT</span>
+        </AddNewButton>
+
+        <AddNewButton onClick={() => setOpenSettings(true)}>
+          <span>SETTINGS</span>
         </AddNewButton>
 
         <input
@@ -102,6 +110,8 @@ export const HeaderBoard = ({ currentProject }: { currentProject: any }) => {
           <span>DELRTE</span>
         </AddNewButton>
       </Modal>
+
+      <Settings open={openSettings} onClose={() => setOpenSettings(false)} />
     </Container>
   );
 };
