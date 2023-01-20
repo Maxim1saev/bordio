@@ -1,24 +1,30 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 import { ReactComponent as PlusIcon } from "../../../public/icons/PlusIcon.svg";
 
-import { useAuth } from "../../../useAuth";
+import { useAuth } from "../../../hooks/useAuth";
 
 import { Modal } from "../../../components/Modal";
 import { signOut } from "firebase/auth";
 
 import { setDoc, doc, deleteDoc, serverTimestamp } from "firebase/firestore";
 
-import { Settings } from "../Settings";
+import { Settings } from "../../Settings";
 
-import { Container, AvatarStyled, Side, AddNewButton } from "./styled";
+import { Container, Side, AddNewButton } from "./styled";
+
+import { User } from "./User";
 
 export const HeaderBoard = ({ currentProject }: { currentProject: any }) => {
   const [open, setOpen] = useState(false);
-  const [openSettings, setOpenSettings] = useState(false);
+  const [openSettings, setOpenSettings] = useState<boolean>(false);
   const [columnName, setColumnName] = useState("");
-  const [userImage, setUserImage] = useState<any>();
-  const { dataBase, auth, user, setUser, uploadUserAvatar } = useAuth();
+  const { dataBase, auth, user, setUser } = useAuth();
+
+  const handleToggleSettings = useCallback(
+    () => setOpenSettings((prevValue) => !prevValue),
+    []
+  );
 
   const addNewColumn = async () => {
     const docRef = doc(
@@ -51,10 +57,6 @@ export const HeaderBoard = ({ currentProject }: { currentProject: any }) => {
       .catch((error) => {});
   };
 
-  const handleUpload = () => {
-    uploadUserAvatar(userImage, user);
-  };
-
   const onClose = () => setOpen(false);
 
   return (
@@ -63,36 +65,20 @@ export const HeaderBoard = ({ currentProject }: { currentProject: any }) => {
         <AddNewButton onClick={() => setOpen(true)}>
           <PlusIcon />
 
-          <span>Add column</span>
+          <span>Добавить колонку</span>
         </AddNewButton>
         <AddNewButton onClick={() => setOpen(true)}>
           <PlusIcon />
 
-          <span>DELETE column</span>
+          <span>Удалить колонку</span>
         </AddNewButton>
-
-        <AddNewButton onClick={handleOut}>
-          <span>OUT</span>
-        </AddNewButton>
-
-        <AddNewButton onClick={() => setOpenSettings(true)}>
-          <span>SETTINGS</span>
-        </AddNewButton>
-
-        <input
-          accept=".jpg, .jpeg, .png,"
-          type="file"
-          onChange={(event: any) => {
-            setUserImage(event.target.files[0]);
-          }}
-        />
-        <button onClick={handleUpload}>UPLOAD</button>
       </Side>
 
-      <Side>
-        {user.displayName}
-        <AvatarStyled src={user.photoURL} />
-      </Side>
+      <User
+        username={user.displayName}
+        userPhoto={user.photoURL}
+        handleOpenSettings={handleToggleSettings}
+      />
 
       <Modal open={open} onClose={onClose}>
         <input
@@ -111,7 +97,7 @@ export const HeaderBoard = ({ currentProject }: { currentProject: any }) => {
         </AddNewButton>
       </Modal>
 
-      <Settings open={openSettings} onClose={() => setOpenSettings(false)} />
+      <Settings open={openSettings} onClose={handleToggleSettings} />
     </Container>
   );
 };

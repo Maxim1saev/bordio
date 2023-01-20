@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from "react";
 import { sendPasswordResetEmail } from "firebase/auth";
 
-import { useAuth } from "../../useAuth";
+import { useAuth } from "../../hooks/useAuth";
 
 import { Button } from "../../components/Button";
 

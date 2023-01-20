@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useTypedSelector, useActions } from "../../../hooks";
 import styled from "styled-components";
-import { useAuth } from "../../../useAuth";
+import { useAuth } from "../../../hooks/useAuth";
 
 import { Card } from "./Card";
 

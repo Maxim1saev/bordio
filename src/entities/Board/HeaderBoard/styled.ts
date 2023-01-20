@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { Avatar } from "../../../components";
 
 export const Container = styled.div`
   position: fixed;
@@ -13,11 +12,6 @@ export const Container = styled.div`
   padding: 20px;
 
   box-shadow: 0px 2px 4px #f0f1f2;
-`;
-
-export const AvatarStyled = styled(Avatar)`
-  width: 40px;
-  height: 40px;
 `;
 
 export const Side = styled.div`

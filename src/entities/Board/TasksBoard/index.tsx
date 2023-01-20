@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { useTypedSelector } from "../../../hooks";
 
-import { useAuth } from "../../../useAuth";
+import { useAuth } from "../../../hooks/useAuth";
 
 import { Card } from "./Card";
 

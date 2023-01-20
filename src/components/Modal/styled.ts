@@ -14,10 +14,14 @@ export const Container = styled.div`
 `;
 
 export const Card = styled.div`
-  min-height: 300px;
-  min-width: 300px;
+  min-height: 400px;
+  min-width: 500px;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
   background: white;
+  padding: 24px;
+
+  border-radius: 8px;
 `;

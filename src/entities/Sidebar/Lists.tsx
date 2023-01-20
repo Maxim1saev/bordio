@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { ExpansionPanel } from "../../components/ExpansionPanel";
 
-import { useAuth } from "../../useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import { Modal } from "../../components/Modal";
 
 import { collection, setDoc, doc } from "firebase/firestore";

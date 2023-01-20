@@ -1,22 +1,32 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback, RefObject } from "react";
 
 export const useClickOutside = (
-  ref: React.RefObject<HTMLElement>,
+  ref: RefObject<HTMLElement> | null,
   handler: () => void
 ) => {
-  const listener = (event: MouseEvent) => {
-    if (!ref.current || ref.current === event.target) {
-      return;
-    }
+  useEffect(
+    () => {
+      const listener = (event: any) => {
+        if (!ref?.current || ref.current.contains(event.target)) {
+          return;
+        }
 
-    handler();
-  };
+        handler();
+      };
 
-  useEffect(() => {
-    document.addEventListener('click', listener, true);
-
-    return () => {
-      document.removeEventListener('click', listener, true);
-    };
-  }, [ref, handler]);
+      document.addEventListener("mousedown", listener);
+      document.addEventListener("touchstart", listener);
+      return () => {
+        document.removeEventListener("mousedown", listener);
+        document.removeEventListener("touchstart", listener);
+      };
+    },
+    // Add ref and handler to effect dependencies
+    // It's worth noting that because passed in handler is a new ...
+    // ... function on every render that will cause this effect ...
+    // ... callback/cleanup to run every render. It's not a big deal ...
+    // ... but to optimize you can wrap handler in useCallback before ...
+    // ... passing it into this hook.
+    [ref, handler]
+  );
 };

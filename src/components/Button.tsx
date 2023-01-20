@@ -1,3 +1,4 @@
+import { MouseEventHandler } from "react";
 import styled, { css } from "styled-components";
 
 type IColorButton = "blue" | "white";
@@ -54,7 +55,7 @@ interface ButtonProps {
   children?: React.ReactNode;
   className?: string;
   variant?: IColorButton;
-  onClick: () => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export const Button: React.FC<ButtonProps> = ({
