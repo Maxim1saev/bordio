@@ -1,4 +1,4 @@
-import { ChangeEvent, createContext, useCallback, useState } from "react";
+import { useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import { Provider } from "react-redux";
 
@@ -17,9 +17,8 @@ import { Reset } from "./pages/Auth/Reset";
 
 import { AuthContext } from "./context";
 import { TablePage } from "./pages/TablePage";
-import { updateProfile } from "firebase/auth";
 
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getStorage } from "firebase/storage";
 
 const Layout = styled.div`
   height: 100vh;
@@ -44,16 +43,6 @@ const auth = getAuth();
 
 let dataBase: Firestore | null = getFirestore(app);
 
-const uploadUserAvatar = async (file: any, user: any, setLoading: any) => {
-  const fileRef = ref(storage, user?.uid + ".png");
-
-  await uploadBytes(fileRef, file);
-
-  const photoURL = await getDownloadURL(fileRef);
-
-  updateProfile(user, { photoURL });
-};
-
 const App = () => {
   const [user, setUser] = useState<any>(null);
 
@@ -63,7 +52,6 @@ const App = () => {
     user,
     setUser,
     storage,
-    uploadUserAvatar,
   };
 
   return (

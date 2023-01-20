@@ -2,7 +2,7 @@ import React, { FC } from "react";
 
 import { TaskTitle, TaskDuration, Container } from "./styled";
 
-import { useAuth } from "../../../../useAuth";
+import { useAuth } from "../../../../hooks/useAuth";
 
 import {
   addDoc,

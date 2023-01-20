@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Lists } from "./Lists";
 import { ReactComponent as BordioLogo } from "../../public/icons/BordioLogo.svg";
 import { Avatar } from "../../components";
-import { useAuth } from "../../useAuth";
+import { useAuth } from "../../hooks/useAuth";
 
 const Container = styled.aside`
   width: 226px;

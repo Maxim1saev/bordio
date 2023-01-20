@@ -1,9 +1,16 @@
 import React, { FC } from "react";
 
-import styled from "styled-components";
+import {
+  InputName,
+  Container,
+  InputError,
+  InputComponent,
+  ErrorIconStyled,
+} from "./styled";
 
 interface InputProps {
   placeholder?: string;
+  error?: string;
   value: string;
   type: string;
   className?: string;
@@ -18,26 +25,24 @@ export const Input: FC<InputProps> = ({
   onChange,
   value,
   type,
+  error,
   ...rest
 }) => (
-  <InputComponent
-    onChange={onChange}
-    value={value}
-    type={type}
-    placeholder={placeholder}
-    {...rest}
-  />
+  <Container>
+    <InputName>Last Name</InputName>
+
+    <InputComponent
+      onChange={onChange}
+      value={value}
+      type={type}
+      placeholder={placeholder}
+      {...rest}
+    />
+
+    {error && (
+      <InputError>
+        <ErrorIconStyled /> <span>{error}</span>
+      </InputError>
+    )}
+  </Container>
 );
-
-const InputComponent = styled.input`
-  width: 100%;
-  min-height: 50px;
-  margin-bottom: 16px;
-  padding: 0px 18px;
-
-  line-height: 50px;
-  border-radius: 8px;
-  border: 0px;
-  background: rgb(238, 242, 245);
-  font-size: 16px;
-`;

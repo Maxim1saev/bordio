@@ -6,7 +6,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 
-import { useAuth } from "../../useAuth";
+import { useAuth } from "../../hooks/useAuth";
 
 import { Button } from "../../components/Button";
 
