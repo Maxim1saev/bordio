@@ -10,6 +10,7 @@ export const Container = styled.div`
 export const Header = styled.div`
   display: flex;
   align-items: center;
+  padding: 0 16px;
 
   cursor: pointer;
 
@@ -32,6 +33,6 @@ export const Content = styled.div<{ expanded: boolean }>`
   margin-top: ${({ expanded }) => expanded && "22px"};
 
   opacity: ${({ expanded }) => (expanded ? 1 : 0)};
-  overflow: hidden;
+  /* overflow: hidden; */
   transition: all 0.08s;
 `;

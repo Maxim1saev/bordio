@@ -1,11 +1,10 @@
 import { useState, useCallback } from "react";
 
-import { ReactComponent as PlusIcon } from "../../../public/icons/PlusIcon.svg";
+import { ReactComponent as PlusIcon } from "../../../assets/PlusIcon.svg";
 
 import { useAuth } from "../../../hooks/useAuth";
 
 import { Modal } from "../../../components/Modal";
-import { signOut } from "firebase/auth";
 
 import { setDoc, doc, deleteDoc, serverTimestamp } from "firebase/firestore";
 
@@ -19,7 +18,7 @@ export const HeaderBoard = ({ currentProject }: { currentProject: any }) => {
   const [open, setOpen] = useState(false);
   const [openSettings, setOpenSettings] = useState<boolean>(false);
   const [columnName, setColumnName] = useState("");
-  const { dataBase, auth, user, setUser } = useAuth();
+  const { dataBase, user } = useAuth();
 
   const handleToggleSettings = useCallback(
     () => setOpenSettings((prevValue) => !prevValue),
@@ -47,14 +46,6 @@ export const HeaderBoard = ({ currentProject }: { currentProject: any }) => {
     );
 
     await deleteDoc(docRef);
-  };
-
-  const handleOut = () => {
-    signOut(auth)
-      .then(() => {
-        setUser({});
-      })
-      .catch((error) => {});
   };
 
   const onClose = () => setOpen(false);

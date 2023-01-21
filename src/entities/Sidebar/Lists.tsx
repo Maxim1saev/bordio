@@ -9,9 +9,17 @@ import { Modal } from "../../components/Modal";
 import { collection, setDoc, doc } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
-import { ReactComponent as PlusIcon } from "../../public/icons/PlusIcon.svg";
+import { Item } from "./Item";
 
-export const Lists = ({ setCurrentProject }: { setCurrentProject: any }) => {
+import { ReactComponent as PlusIcon } from "../../assets/PlusIcon.svg";
+
+export const Lists = ({
+  setCurrentProject,
+  currentProject,
+}: {
+  setCurrentProject: any;
+  currentProject: string | undefined;
+}) => {
   const [open, setOpen] = useState(false);
   const [projectName, setProjectName] = useState("");
 
@@ -50,9 +58,11 @@ export const Lists = ({ setCurrentProject }: { setCurrentProject: any }) => {
         >
           <ul>
             {projects?.map(({ title }) => (
-              <ListItem onClick={() => setCurrentProject(title)}>
-                {title}
-              </ListItem>
+              <Item
+                isActive={currentProject === title}
+                title={title}
+                setCurrentProject={setCurrentProject}
+              />
             ))}
           </ul>
         </ExpansionPanel>
@@ -96,7 +106,6 @@ export const AddNewButton = styled.button`
 
 const Container = styled.div`
   margin-top: 13px;
-  padding: 0 16px;
 `;
 
 const PanelTitle = styled.div`
@@ -130,20 +139,4 @@ const PlusIconStyled = styled(PlusIcon)`
   width: 14px;
   height: 14px;
   fill: ${({ theme }) => theme.palette.gray4};
-`;
-
-const ListItem = styled.li`
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 16px;
-  color: ${({ theme }) => theme.palette.gray4};
-  cursor: pointer;
-
-  &:hover {
-    color: ${({ theme }) => theme.palette.gray3};
-  }
-
-  &:not(:last-child) {
-    margin-bottom: 18px;
-  }
 `;
