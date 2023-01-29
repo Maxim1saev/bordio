@@ -20,6 +20,10 @@ const Container = styled.div`
   width: 100%;
 `;
 
+const ButtonStyled = styled(Button)`
+  height: 50%;
+`;
+
 const SelectStyled = styled(Select)`
   & > div:first-of-type {
     margin-bottom: 24px;
@@ -69,7 +73,7 @@ export const Settings = ({ onClose, open }: SettingsProps) => {
           options={options}
         />
 
-        <Button onClick={handleUpdateName}>Save changes</Button>
+        <ButtonStyled onClick={handleUpdateName}>Save changes</ButtonStyled>
       </Container>
     </Modal>
   );

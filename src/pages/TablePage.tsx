@@ -5,7 +5,10 @@ export const TablePage = () => {
   const [currentProject, setCurrentProject] = useState();
   return (
     <>
-      <Sidebar setCurrentProject={setCurrentProject} />
+      <Sidebar
+        currentProject={currentProject}
+        setCurrentProject={setCurrentProject}
+      />
 
       <Board currentProject={currentProject} />
     </>

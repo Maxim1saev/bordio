@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 
 import {
   InputName,
@@ -10,9 +10,10 @@ import {
 
 interface InputProps {
   placeholder?: string;
-  error?: string;
-  value: string;
+  error?: string | undefined | boolean;
+  value: string | undefined;
   type: string;
+  label?: string;
   className?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   Icon?: React.ReactElement;
@@ -26,23 +27,32 @@ export const Input: FC<InputProps> = ({
   value,
   type,
   error,
+  label,
   ...rest
-}) => (
-  <Container>
-    <InputName>Last Name</InputName>
+}) => {
+  const [focus, setFocus] = useState(false);
 
-    <InputComponent
-      onChange={onChange}
-      value={value}
-      type={type}
-      placeholder={placeholder}
-      {...rest}
-    />
+  useEffect(() => setFocus(true), []);
 
-    {error && (
-      <InputError>
-        <ErrorIconStyled /> <span>{error}</span>
-      </InputError>
-    )}
-  </Container>
-);
+  return (
+    <Container>
+      {label && <InputName>{label}</InputName>}
+
+      <InputComponent
+        onBlur={() => setFocus(false)}
+        onFocus={() => setFocus(true)}
+        onChange={onChange}
+        value={value}
+        type={type}
+        placeholder={placeholder}
+        {...rest}
+      />
+
+      {!focus && error && (
+        <InputError>
+          <ErrorIconStyled /> <span>{error}</span>
+        </InputError>
+      )}
+    </Container>
+  );
+};

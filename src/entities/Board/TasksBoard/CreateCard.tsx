@@ -6,7 +6,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import { Card } from "./Card";
 
 import { Container, Grid, Column, ColumnTitle, HeadGrid } from "./styled";
-import { ReactComponent as AddTaskIcon } from "../../public/icons/AddTaskIcon.svg";
+import { ReactComponent as AddTaskIcon } from "../../assets/AddTaskIcon.svg";
 import { Modal } from "../../../components/Modal";
 
 import { v4 as uuidv4 } from "uuid";

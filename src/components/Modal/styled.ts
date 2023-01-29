@@ -19,9 +19,8 @@ export const Card = styled.div`
   height: auto;
   display: flex;
   align-items: center;
-  justify-content: center;
-  background: white;
   padding: 24px;
 
+  background: white;
   border-radius: 8px;
 `;

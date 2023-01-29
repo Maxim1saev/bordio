@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 import { Lists } from "./Lists";
-import { ReactComponent as BordioLogo } from "../../public/icons/BordioLogo.svg";
+import { ReactComponent as BordioLogo } from "../../assets/BordioLogo.svg";
 import { Avatar } from "../../components";
 import { useAuth } from "../../hooks/useAuth";
 
@@ -39,7 +39,13 @@ const WorkspaceContainer = styled.div`
   }
 `;
 
-export const Sidebar = ({ setCurrentProject }: { setCurrentProject: any }) => {
+export const Sidebar = ({
+  setCurrentProject,
+  currentProject,
+}: {
+  setCurrentProject: any;
+  currentProject: string | undefined;
+}) => {
   const { user } = useAuth();
 
   return (
@@ -55,7 +61,10 @@ export const Sidebar = ({ setCurrentProject }: { setCurrentProject: any }) => {
           <span> My workspace</span>
         </WorkspaceContainer>
 
-        <Lists setCurrentProject={setCurrentProject} />
+        <Lists
+          currentProject={currentProject}
+          setCurrentProject={setCurrentProject}
+        />
       </Wrap>
     </Container>
   );

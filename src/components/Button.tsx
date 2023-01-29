@@ -1,12 +1,16 @@
-import { MouseEventHandler } from "react";
 import styled, { css } from "styled-components";
 
 type IColorButton = "blue" | "white";
 
-const ButtonComponent = styled.button<{ variant?: IColorButton }>`
-  width: 100%;
-  min-height: 50px;
+const ButtonComponent = styled.button<{
+  maxWidth: boolean;
+  variant?: IColorButton;
+}>`
+  width: ${({ maxWidth }) => maxWidth && "100%"};
   height: 38px;
+  padding: 0px 15px;
+  height: 38px;
+  min-width: 76px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -29,7 +33,7 @@ const ButtonComponent = styled.button<{ variant?: IColorButton }>`
   ${({ variant }) =>
     variant === "white"
       ? css`
-          border: 1px solid ${({ theme }) => theme.palette.gray5};
+          /* border: 1px solid ${({ theme }) => theme.palette.gray5}; */
 
           font-weight: 400;
           font-size: 14px;
@@ -51,6 +55,7 @@ const ButtonComponent = styled.button<{ variant?: IColorButton }>`
 `;
 
 interface ButtonProps {
+  maxWidth?: boolean;
   disabled?: boolean;
   children?: React.ReactNode;
   className?: string;
@@ -59,12 +64,18 @@ interface ButtonProps {
 }
 
 export const Button: React.FC<ButtonProps> = ({
+  maxWidth = true,
   children,
   variant = "blue",
   className,
   ...restProps
 }: ButtonProps) => (
-  <ButtonComponent variant={variant} className={className} {...restProps}>
+  <ButtonComponent
+    maxWidth={maxWidth}
+    variant={variant}
+    className={className}
+    {...restProps}
+  >
     {children}
   </ButtonComponent>
 );

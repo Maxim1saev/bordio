@@ -24,14 +24,14 @@ export const Container = styled.div`
 
 export const InputError = styled.div`
   position: absolute;
-  top: 74px;
+  top: 56px;
   display: flex;
   align-items: center;
   column-gap: 4px;
 
   span {
-    height: 12px;
     font-size: 12px;
+    line-height: 12px;
     color: ${({ theme }) => theme.palette.red};
   }
 `;
