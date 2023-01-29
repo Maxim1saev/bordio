@@ -20,7 +20,8 @@ export const defaultTheme: DefaultTheme = {
     blue3: "#0F1D40",
     blue4: "#0076CC",
 
-    red: "rgba(240, 6, 6, 0.447)",
+    paleRed: "rgba(240, 6, 6, 0.447)",
+    red: "rgba(240, 6, 6)",
     green: "#435E52",
 
     lightPurple: "#D8DCFF",

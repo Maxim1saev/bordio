@@ -1,17 +1,17 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import styled from "styled-components";
 
 import { ExpansionPanel } from "../../components/ExpansionPanel";
 
 import { useAuth } from "../../hooks/useAuth";
-import { Modal } from "../../components/Modal";
 
-import { collection, setDoc, doc } from "firebase/firestore";
+import { collection, query, orderBy } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
 import { Item } from "./Item";
 
 import { ReactComponent as PlusIcon } from "../../assets/PlusIcon.svg";
+import { CreateProjectModal } from "./CreateProjectModal";
 
 export const Lists = ({
   setCurrentProject,
@@ -21,21 +21,20 @@ export const Lists = ({
   currentProject: string | undefined;
 }) => {
   const [open, setOpen] = useState(false);
-  const [projectName, setProjectName] = useState("");
 
   const { user, dataBase } = useAuth();
 
-  const addNew = async () => {
-    const docRef = doc(dataBase, `users/${user.uid}/projects`, projectName);
+  const onToggle = () => setOpen((prevValue) => !prevValue);
 
-    await setDoc(docRef, { title: projectName });
-  };
+  const queryData = useMemo(() => {
+    const collectionRef = collection(dataBase, `users/${user.uid}/projects`);
 
-  const onClose = () => setOpen(false);
+    return query(collectionRef, orderBy("timestamp", "asc"));
+  }, [dataBase, user.uid]);
 
-  const query = collection(dataBase, `users/${user.uid}/projects`);
+  const [projects, loading, error] = useCollectionData(queryData);
 
-  const [projects, loading, error] = useCollectionData(query);
+  const titles = useMemo(() => projects?.map(({ title }) => title), [projects]);
 
   return (
     <>
@@ -44,65 +43,41 @@ export const Lists = ({
           title={
             <PanelTitle>
               My Projects
-              <IconWrapper>
-                <PlusIconStyled
-                  onClick={(event) => {
-                    event.stopPropagation();
+              <IconWrapper
+                onClick={(event) => {
+                  event.stopPropagation();
 
-                    setOpen(true);
-                  }}
-                />
+                  onToggle();
+                }}
+              >
+                <PlusIconStyled />
               </IconWrapper>
             </PanelTitle>
           }
         >
           <ul>
-            {projects?.map(({ title }) => (
+            {projects?.map(({ title, id }) => (
               <Item
-                isActive={currentProject === title}
                 title={title}
+                titles={titles}
+                id={id}
+                isActive={currentProject === title}
                 setCurrentProject={setCurrentProject}
               />
             ))}
           </ul>
         </ExpansionPanel>
       </Container>
-      <Modal open={open} onClose={onClose}>
-        <input
-          style={{ border: "1px solid" }}
-          value={projectName}
-          onChange={(event: any) => setProjectName(event.target.value)}
-          type="text"
-        />
 
-        <AddNewButton onClick={addNew}>
-          <span>CREATE</span>
-        </AddNewButton>
-      </Modal>
-      ;
+      <CreateProjectModal
+        open={open}
+        onClose={onToggle}
+        projects={projects}
+        titles={titles}
+      />
     </>
   );
 };
-
-export const AddNewButton = styled.button`
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  column-gap: 8px;
-  padding: 8px 20px;
-
-  border-radius: 50px;
-  box-shadow: 0px 2px 4px #f0f1f2;
-  background: ${({ theme }) => theme.palette.blue1};
-
-  span {
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 16px;
-    color: ${({ theme }) => theme.palette.white};
-  }
-`;
 
 const Container = styled.div`
   margin-top: 13px;
@@ -122,8 +97,8 @@ const PanelTitle = styled.div`
 `;
 
 const IconWrapper = styled.div`
-  width: 18px;
-  height: 18px;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;

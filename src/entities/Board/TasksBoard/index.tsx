@@ -15,11 +15,15 @@ import { Container, Grid, Column, ColumnTitle, HeadGrid } from "./styled";
 import { ReactComponent as AddTaskIcon } from "../../../assets/AddTaskIcon.svg";
 import { CreateCard } from "./CreateCard";
 
-import { collection, setDoc, doc, orderBy, query } from "firebase/firestore";
+import { setDoc, doc, DocumentData } from "firebase/firestore";
 
-import { useCollectionData } from "react-firebase-hooks/firestore";
-
-export const TasksBoard = ({ currentProject }: { currentProject: any }) => {
+export const TasksBoard = ({
+  currentProject,
+  docs,
+}: {
+  docs: DocumentData[] | undefined;
+  currentProject: any;
+}) => {
   const [newTaskColumn, setNewTaskColumn] = useState<string | undefined>();
 
   const onClose = useCallback(() => {
@@ -37,8 +41,6 @@ export const TasksBoard = ({ currentProject }: { currentProject: any }) => {
 
   const { dataBase, user } = useAuth();
 
-  console.log("user", user);
-
   const [list, setList] = useState<any[]>(tasks);
 
   const editTasks = useCallback(
@@ -55,17 +57,6 @@ export const TasksBoard = ({ currentProject }: { currentProject: any }) => {
     },
     [currentProject, dataBase, list, user.uid]
   );
-
-  const queryData = useMemo(() => {
-    const collectionRef = collection(
-      dataBase,
-      `users/${user.uid}/projects/${currentProject}/columns`
-    );
-
-    return query(collectionRef, orderBy("timestamp", "asc"));
-  }, [currentProject, dataBase, user.uid]);
-
-  const [docs, loading, error] = useCollectionData(queryData);
 
   useEffect(() => {
     docs?.length ? setList(docs) : setList([]);
