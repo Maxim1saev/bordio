@@ -11,9 +11,16 @@ import { useAuth } from "../../../hooks/useAuth";
 
 import { Card } from "./Card";
 
-import { Container, Grid, Column, ColumnTitle, HeadGrid } from "./styled";
-import { ReactComponent as AddTaskIcon } from "../../../assets/AddTaskIcon.svg";
-import { CreateCard } from "./CreateCard";
+import {
+  Container,
+  Grid,
+  Column,
+  ColumnTitle,
+  HeadGrid,
+  AddTaskIconStyled,
+  EmptySpace,
+} from "./styled";
+import { CreateCardModal } from "./CreateCardModal";
 
 import { setDoc, doc, DocumentData } from "firebase/firestore";
 
@@ -168,18 +175,20 @@ export const TasksBoard = ({
                 />
               ))}
 
-              <CreateCard
-                title={newTaskColumn}
-                currentProject={currentProject}
-                open={!!newTaskColumn}
-                onClose={onClose}
-              />
-
-              <AddTaskIcon onClick={() => onOpen(group.title)} />
+              <EmptySpace>
+                <AddTaskIconStyled onClick={() => onOpen(group.title)} />
+              </EmptySpace>
             </Column>
           ))}
         </Grid>
       </Container>
+
+      <CreateCardModal
+        title={newTaskColumn}
+        currentProject={currentProject}
+        open={!!newTaskColumn}
+        onClose={onClose}
+      />
     </>
   );
 };

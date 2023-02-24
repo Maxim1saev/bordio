@@ -48,11 +48,9 @@ export const Input: FC<InputProps> = ({
         {...rest}
       />
 
-      {!focus && error && (
-        <InputError>
-          <ErrorIconStyled /> <span>{error}</span>
-        </InputError>
-      )}
+      <InputError isShow={!!error}>
+        <ErrorIconStyled /> <span>{error}</span>
+      </InputError>
     </Container>
   );
 };

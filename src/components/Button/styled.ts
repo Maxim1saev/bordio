@@ -1,16 +1,13 @@
 import styled, { css } from "styled-components";
+import { IColorButton } from "./types";
 
-type IColorButton = "blue" | "white";
-
-const ButtonComponent = styled.button<{
+export const ButtonComponent = styled.button<{
   maxWidth: boolean;
   variant?: IColorButton;
 }>`
   width: ${({ maxWidth }) => maxWidth && "100%"};
-  height: 38px;
-  padding: 0px 15px;
-  height: 38px;
   min-width: 76px;
+  height: 38px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -33,8 +30,6 @@ const ButtonComponent = styled.button<{
   ${({ variant }) =>
     variant === "white"
       ? css`
-          /* border: 1px solid ${({ theme }) => theme.palette.gray5}; */
-
           font-weight: 400;
           font-size: 14px;
           color: ${({ theme }) => theme.palette.black};
@@ -53,29 +48,3 @@ const ButtonComponent = styled.button<{
           }
         `}
 `;
-
-interface ButtonProps {
-  maxWidth?: boolean;
-  disabled?: boolean;
-  children?: React.ReactNode;
-  className?: string;
-  variant?: IColorButton;
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-}
-
-export const Button: React.FC<ButtonProps> = ({
-  maxWidth = true,
-  children,
-  variant = "blue",
-  className,
-  ...restProps
-}: ButtonProps) => (
-  <ButtonComponent
-    maxWidth={maxWidth}
-    variant={variant}
-    className={className}
-    {...restProps}
-  >
-    {children}
-  </ButtonComponent>
-);

@@ -29,7 +29,7 @@ export const DeleteProjectModal: FC<IItem> = ({ open, title, id, onClose }) => {
         <Text>
           <Title> Delete project</Title>
           <AreYouSure>
-            Ты хочешь удалить проект
+            Ты точно хочешь удалить проект
             <ProjectName>{title}</ProjectName> ?
           </AreYouSure>
         </Text>
@@ -60,8 +60,8 @@ const ProjectName = styled.span`
   white-space: nowrap;
   font-weight: 600;
   border-radius: 6px;
-  background: ${({ theme }) => theme.palette.gray};
-  border: 1px solid ${({ theme }) => theme.palette.gray4}; ;
+  background-color: ${({ theme }) => theme.palette.gray2};
+  color: ${({ theme }) => theme.palette.blue3}; ;
 `;
 
 const Controls = styled.div`
@@ -100,6 +100,7 @@ const AreYouSure = styled.div`
   align-items: center;
   column-gap: 6px;
 
+  font-weight: 500;
   font-size: 14px;
   line-height: 18px;
   white-space: nowrap;

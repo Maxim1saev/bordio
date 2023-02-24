@@ -1,9 +1,7 @@
-import { ChangeEvent, FC, useEffect, useState } from "react";
+import { ChangeEvent, FC, useState } from "react";
 import styled from "styled-components";
 
-import { Button, Modal, Input } from "../../components";
-import { useAuth } from "../../hooks";
-import { doc, updateDoc } from "firebase/firestore";
+import { Button, Modal, Input } from "../../../components";
 
 interface ColumnModalProps {
   open: boolean;
@@ -21,9 +19,6 @@ export const ColumnModal: FC<ColumnModalProps> = ({
   onClose,
 }) => {
   const [name, setName] = useState<string | undefined>(undefined);
-  const { dataBase, user } = useAuth();
-
-  console.log("columns", columns);
 
   const errorMessage =
     !!name?.length &&
@@ -57,7 +52,7 @@ export const ColumnModal: FC<ColumnModalProps> = ({
           </Button>
 
           <Button
-            disabled={!name?.length && !!errorMessage}
+            disabled={!!errorMessage}
             maxWidth={false}
             onClick={() => name && actionHandler(name)}
           >

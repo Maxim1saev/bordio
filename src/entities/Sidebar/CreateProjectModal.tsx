@@ -27,10 +27,15 @@ export const CreateProjectModal: FC<ICreateProjectModalProps> = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const projectId = useMemo(() => uuidv4(), [projects]);
 
+  const handleClose = () => {
+    setProjectName(undefined);
+    onClose();
+  };
+
   const createProject = async () => {
     const docRef = doc(dataBase, `users/${user.uid}/projects`, projectId);
 
-    onClose();
+    handleClose();
 
     await setDoc(docRef, {
       id: projectId,
@@ -39,18 +44,22 @@ export const CreateProjectModal: FC<ICreateProjectModalProps> = ({
     });
   };
 
-  const errorMessage =
-    !!projectName?.length &&
-    (projectName?.length < 3
-      ? "The name is too short"
-      : projectName?.length > 30
-      ? "The name must be shorter than 30 characters"
-      : titles?.includes(projectName)
-      ? "Такое имя есть"
-      : "");
+  const errorMessage = useMemo(
+    () =>
+      !!projectName?.length &&
+      (projectName?.length < 3
+        ? "The name is too short"
+        : projectName?.length > 30
+        ? "The name must be shorter than 30 characters"
+        : titles?.includes(projectName)
+        ? "Такое имя есть"
+        : ""),
+
+    [projectName, titles]
+  );
 
   return (
-    <ModalStyled open={open} onClose={onClose}>
+    <ModalStyled open={open} onClose={handleClose}>
       <Container>
         <Text>
           <Title>Create project</Title>
@@ -67,12 +76,12 @@ export const CreateProjectModal: FC<ICreateProjectModalProps> = ({
         </Text>
 
         <Controls>
-          <Button variant="white" maxWidth={false} onClick={onClose}>
+          <Button variant="white" maxWidth={false} onClick={handleClose}>
             Cancel
           </Button>
 
           <Button
-            disabled={!!errorMessage}
+            disabled={!projectName?.length || !!errorMessage}
             maxWidth={false}
             onClick={createProject}
           >

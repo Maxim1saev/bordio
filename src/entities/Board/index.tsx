@@ -33,8 +33,6 @@ export const Board = ({ currentProject }: { currentProject: any }) => {
 
   const [docs, loading, error] = useCollectionData(queryData);
 
-  console.log("docs", docs);
-
   return (
     <Container>
       <HeaderBoard columns={docs} currentProject={currentProject} />

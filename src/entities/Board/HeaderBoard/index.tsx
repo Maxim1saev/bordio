@@ -4,8 +4,6 @@ import { ReactComponent as PlusIcon } from "../../../assets/PlusIcon.svg";
 
 import { useAuth } from "../../../hooks/useAuth";
 
-import { Modal } from "../../../components/Modal";
-
 import {
   setDoc,
   doc,
@@ -19,7 +17,7 @@ import { Settings } from "../../Settings";
 import { Container, Side, AddNewButton } from "./styled";
 
 import { User } from "./User";
-import { ColumnModal } from "../../Sidebar/ColumnModal";
+import { ColumnModal } from "./ColumnModal";
 
 export const HeaderBoard = ({
   currentProject,
@@ -45,6 +43,8 @@ export const HeaderBoard = ({
       columnName
     );
 
+    setOpenAdd(false);
+
     await setDoc(docRef, {
       timestamp: serverTimestamp(),
       title: columnName,
@@ -57,6 +57,8 @@ export const HeaderBoard = ({
       dataBase,
       `users/${user.uid}/projects/${currentProject}/columns/${columnName}`
     );
+
+    setOpenDelete(false);
 
     await deleteDoc(docRef);
   };
@@ -80,6 +82,7 @@ export const HeaderBoard = ({
         userPhoto={user.photoURL}
         handleOpenSettings={handleToggleSettings}
       />
+
       <ColumnModal
         columns={columns?.map(({ title }) => title)}
         actionName="Add column"
