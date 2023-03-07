@@ -61,7 +61,7 @@ export const Lists = ({
                 title={title}
                 titles={titles}
                 id={id}
-                isActive={currentProject === title}
+                isActive={currentProject === id}
                 setCurrentProject={setCurrentProject}
               />
             ))}

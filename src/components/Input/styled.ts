@@ -22,12 +22,19 @@ export const Container = styled.div`
   margin-bottom: 24px;
 `;
 
-export const InputError = styled.div`
+interface IInputError {
+  isShow: boolean;
+}
+
+export const InputError = styled.div<IInputError>`
   position: absolute;
   top: 56px;
   display: flex;
   align-items: center;
   column-gap: 4px;
+
+  transition: all 0.2s;
+  opacity: ${({ isShow }) => (isShow ? 1 : 0)};
 
   span {
     font-size: 12px;

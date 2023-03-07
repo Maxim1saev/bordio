@@ -45,7 +45,7 @@ export const Card: FC<CardProps> = ({
   handleDragStart,
   handleDragEnter,
 }) => {
-  const { dataBase, auth, user, setUser } = useAuth();
+  const { dataBase, user } = useAuth();
 
   const documents = doc(
     dataBase,
@@ -63,10 +63,10 @@ export const Card: FC<CardProps> = ({
 
   return (
     <Container
+      key={item.id}
       onDragStart={handleDragStart}
       onDragEnter={handleDragEnter}
       draggable
-      key={item.id}
       background={item.color}
       isCurrent={isCurrent}
     >

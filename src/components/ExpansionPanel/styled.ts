@@ -33,6 +33,5 @@ export const Content = styled.div<{ expanded: boolean }>`
   margin-top: ${({ expanded }) => expanded && "22px"};
 
   opacity: ${({ expanded }) => (expanded ? 1 : 0)};
-  /* overflow: hidden; */
   transition: all 0.08s;
 `;

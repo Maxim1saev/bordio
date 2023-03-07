@@ -30,11 +30,10 @@ export const Container = styled.div`
   right: 0;
   top: 100%;
   margin: 5px 0;
-
   padding: 0 8px 8px 8px;
 
+  cursor: default;
   background-color: ${({ theme }) => theme.palette.white};
-
   box-shadow: rgb(67 90 111 / 30%) 0px 0px 1px,
     rgb(67 90 111 / 47%) 0px 8px 10px -4px;
 `;

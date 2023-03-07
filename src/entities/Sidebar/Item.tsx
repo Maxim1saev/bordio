@@ -54,7 +54,7 @@ export const Item: FC<IItem> = ({
       <ListItem
         isActive={isActive}
         open={openPopover}
-        onClick={() => setCurrentProject(title)}
+        onClick={() => setCurrentProject(id)}
       >
         <Title isActive={isActive}>{title}</Title>
 

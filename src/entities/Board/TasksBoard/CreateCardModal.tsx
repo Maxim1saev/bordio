@@ -60,7 +60,7 @@ const Circle = styled.button<{ color: string }>`
   border-radius: 50%;
 `;
 
-export const CreateCard = ({
+export const CreateCardModal = ({
   open,
   onClose,
   title,
